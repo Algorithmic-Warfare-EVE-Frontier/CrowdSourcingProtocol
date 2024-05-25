@@ -1,0 +1,6 @@
+- [ ] `packages/client`, Kickstarter DApp frontend.
+    - [ ] Main view. Entry point of the Dapp.
+    - [ ] Project listing view.
+    - [ ] Project creation view.
+- [ ] `packages/contract`, Kickstarter smart logic.
+    - WIP
