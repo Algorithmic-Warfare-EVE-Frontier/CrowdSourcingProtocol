@@ -1,6 +1,6 @@
-import { defineWorld } from "@latticexyz/world";
+import { mudConfig } from "@latticexyz/world/register";
 
-export default defineWorld({
+export default mudConfig({
   enums: {
     ProjectStatus: ["CROWDING", "INPROGRESS", "ARCHIVED"],
     RequestStatus: ["ACTIVE", "CANCELLED", "CLAIMED"],
@@ -10,9 +10,10 @@ export default defineWorld({
   namespace: "app",
   tables: {
     ProjectsMetadataTable: {
-      key: ["projectId"],
-      schema: {
+      keySchema: {
         projectId: "bytes32",
+      },
+      valueSchema: {
         timestamp: "uint32",
         threshold: "uint256",
         target: "uint256",
@@ -21,9 +22,10 @@ export default defineWorld({
       },
     },
     ProjectsDataTable: {
-      key: ["projectId"],
-      schema: {
+      keySchema: {
         projectId: "bytes32",
+      },
+      valueSchema: {
         balance: "uint256",
         rejections: "uint32",
         projectStatus: "ProjectStatus",
@@ -32,18 +34,20 @@ export default defineWorld({
       },
     },
     ContributersTable: {
-      key: ["projectId", "contributer"],
-      schema: {
+      keySchema: {
         projectId: "bytes32",
         contributer: "address",
+      },
+      valueSchema: {
         amount: "uint256",
         votingPower: "uint32",
       },
     },
     RequestsMetadataTable: {
-      key: ["requestId"],
-      schema: {
+      keySchema: {
         requestId: "bytes32",
+      },
+      valueSchema: {
         projectId: "bytes32",
         timestamp: "uint32",
         recepient: "address",
@@ -52,9 +56,10 @@ export default defineWorld({
       },
     },
     RequestsDataTable: {
-      key: ["requestId"],
-      schema: {
+      keySchema: {
         requestId: "bytes32",
+      },
+      valueSchema: {
         approvalRate: "uint32",
         denialRate: "uint32",
         requestStatus: "RequestStatus",
@@ -63,12 +68,12 @@ export default defineWorld({
       },
     },
     VotesTable: {
-      key: ["voteId"],
-      schema: {
-        voteId: "bytes32",
+      keySchema: {
         requestId: "bytes32",
-        timestamp: "uint32",
         contributer: "address",
+      },
+      valueSchema: {
+        timestamp: "uint32",
         vote: "Vote",
         note: "string",
       },

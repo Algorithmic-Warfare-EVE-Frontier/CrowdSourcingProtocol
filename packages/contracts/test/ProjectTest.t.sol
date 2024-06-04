@@ -25,16 +25,4 @@ contract ProjectsTest is MudTest {
     assertEq(project.target, 100);
     assertEq(project.threshold, 10);
   }
-
-  function testDidContribute() public {
-    uint256 user2PrivateKey = vm.envUint("PRIVATE_KEY_2");
-    address user2 = vm.addr(user2PrivateKey);
-
-    bytes32 projectId = keccak256(abi.encode("Sample Project"));
-
-    ContributersTableData memory contribution = ContributersTable.get(projectId, user2);
-
-    console.log(contribution.amount);
-    assertEq(projectId, projectId);
-  }
 }

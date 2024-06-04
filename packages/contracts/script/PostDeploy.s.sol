@@ -24,22 +24,7 @@ contract PostDeploy is Script {
     // user2 creates a projects
     vm.startBroadcast(user2PrivateKey);
 
-    IWorld(worldAddress).app__create(
-      10,
-      100,
-      uint32(block.timestamp + 5 days),
-      "Sample Project",
-      "Contribute to my master plan",
-      true
-    );
-
-    vm.stopBroadcast();
-
-    // user3 makes a contribution
-    vm.startBroadcast(user3PrivateKey);
-
-    bytes32 projectId = keccak256(abi.encode("Sample Project"));
-    // IWorld(worldAddress).app__contribute(projectId);
+    // -------------------------
 
     vm.stopBroadcast();
   }

@@ -44,18 +44,7 @@ contract CSVoteSystem is System {
     uint32 votingPower = ContributersTable.getVotingPower(projectId, contributor);
     uint32 approvalRate = RequestsDataTable.getApprovalRate(requestId) + votingPower;
 
-    bytes32 voteId = keccak256(abi.encode(timestamp));
-
-    VotesTable.set(
-      voteId,
-      VotesTableData({
-        requestId: requestId,
-        timestamp: timestamp,
-        contributer: contributor,
-        vote: Vote.APPROVED,
-        note: note
-      })
-    );
+    VotesTable.set(requestId, contributor, timestamp, Vote.APPROVED, note);
 
     RequestsDataTable.setApprovalRate(requestId, approvalRate);
 
@@ -83,16 +72,7 @@ contract CSVoteSystem is System {
 
     bytes32 voteId = keccak256(abi.encode(timestamp));
 
-    VotesTable.set(
-      voteId,
-      VotesTableData({
-        requestId: requestId,
-        timestamp: timestamp,
-        contributer: contributor,
-        vote: Vote.DECLINED,
-        note: note
-      })
-    );
+    VotesTable.set(requestId, contributor, timestamp, Vote.DECLINED, note);
 
     RequestsDataTable.setDenialRate(requestId, denialRate);
 

@@ -1,5 +1,6 @@
 [profile.default]
 solc = "0.8.24"
+evm_version = "cancun"
 ffi = false
 fuzz_runs = 256
 optimizer = true
@@ -28,3 +29,6 @@ eth_rpc_url = "https://rpc.garnetchain.com"
 
 [profile.redstone]
 eth_rpc_url = "https://rpc.redstonechain.com"
+
+[profile.lattice-testnet]
+eth_rpc_url = "https://testnet-game-sync.nursery.reitnorf.com"
