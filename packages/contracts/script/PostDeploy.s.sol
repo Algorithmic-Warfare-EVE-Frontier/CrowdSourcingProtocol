@@ -6,7 +6,7 @@ import { console } from "forge-std/console.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 
 import { IWorld } from "../src/codegen/world/IWorld.sol";
-import { Tasks, TasksData } from "../src/codegen/index.sol";
+import { ProjectsMetadataTableData } from "../src/codegen/index.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -16,17 +16,30 @@ contract PostDeploy is Script {
     // Load the private key from the `PRIVATE_KEY` environment variable (in .env)
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
 
-    // Start broadcasting transactions from the deployer account
-    vm.startBroadcast(deployerPrivateKey);
+    uint256 user2PrivateKey = vm.envUint("PRIVATE_KEY_2");
+    uint256 user3PrivateKey = vm.envUint("PRIVATE_KEY_3");
+    uint256 user4PrivateKey = vm.envUint("PRIVATE_KEY_4");
+    uint256 user5PrivateKey = vm.envUint("PRIVATE_KEY_5");
 
-    // We can set table records directly
-    Tasks.set("1", TasksData({ description: "Walk the dog", createdAt: block.timestamp, completedAt: 0 }));
+    // user2 creates a projects
+    vm.startBroadcast(user2PrivateKey);
 
-    // Or we can call our own systems
-    IWorld(worldAddress).app__addTask("Take out the trash");
+    IWorld(worldAddress).app__create(
+      10,
+      100,
+      uint32(block.timestamp + 5 days),
+      "Sample Project",
+      "Contribute to my master plan",
+      true
+    );
 
-    bytes32 key = IWorld(worldAddress).app__addTask("Do the dishes");
-    IWorld(worldAddress).app__completeTask(key);
+    vm.stopBroadcast();
+
+    // user3 makes a contribution
+    vm.startBroadcast(user3PrivateKey);
+
+    bytes32 projectId = keccak256(abi.encode("Sample Project"));
+    // IWorld(worldAddress).app__contribute(projectId);
 
     vm.stopBroadcast();
   }
