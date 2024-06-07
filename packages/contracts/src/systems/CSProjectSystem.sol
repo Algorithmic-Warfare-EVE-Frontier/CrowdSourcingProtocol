@@ -2,12 +2,14 @@
 pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
+import { IERC20 } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20.sol";
 import { ProjectsDataTable, ProjectsDataTableData, ProjectsMetadataTable, ProjectsMetadataTableData, ContributersTable, RequestsDataTable, RequestsDataTableData, RequestsMetadataTable, RequestsMetadataTableData } from "../codegen/index.sol";
 import { ProjectStatus, RequestStatus, ApprovalStatus } from "../codegen/common.sol";
+import { EVE_TOKEN_ADDRESS } from "./constants/globals.sol";
 
 contract CSProjectSystem is System {
   // Scopes the function to the manager only.
-  modifier manager(bytes32 projectId) {
+  modifier onlyManager(bytes32 projectId) {
     address manager = ProjectsMetadataTable.getManager(projectId);
     require(_msgSender() == manager);
 
@@ -31,7 +33,7 @@ contract CSProjectSystem is System {
   }
 
   // Verifies that the project has expired.
-  modifier expired(bytes32 projectId) {
+  modifier ifExpired(bytes32 projectId) {
     uint32 deadline = ProjectsMetadataTable.getDeadline(projectId);
     require(block.timestamp > deadline);
 
@@ -41,7 +43,7 @@ contract CSProjectSystem is System {
   }
 
   // Makes sure that the project is archived by the manager.
-  modifier archived(bytes32 projectId) {
+  modifier ifArchived(bytes32 projectId) {
     uint32 deadline = ProjectsMetadataTable.getDeadline(projectId);
     ProjectStatus projectStatus = ProjectsDataTable.getProjectStatus(projectId);
 
@@ -72,17 +74,16 @@ contract CSProjectSystem is System {
    * Create a crowd sourcing project.
    * @param threshold Minimum amount for contributions.
    * @param target Target amount for this project.
+   * @param deadline Deadline by which the project should reach its target.
    * @param title Title of the project.
    * @param description Description of the project.
-   * @param optout Option for contribution opt-out.
    */
   function create(
     uint32 threshold,
     uint32 target,
     uint32 deadline,
     string memory title,
-    string memory description,
-    bool optout
+    string memory description
   ) public {
     address manager = _msgSender();
     uint32 timestamp = uint32(block.timestamp);
@@ -116,7 +117,7 @@ contract CSProjectSystem is System {
    * Archives an on-going project.
    * @param projectId Identifier of the project.
    */
-  function archive(bytes32 projectId) public manager(projectId) {
+  function archive(bytes32 projectId) public onlyManager(projectId) {
     ProjectsDataTable.setProjectStatus(projectId, ProjectStatus.ARCHIVED);
   }
 
@@ -131,7 +132,7 @@ contract CSProjectSystem is System {
 
     uint256 amount = uint256((balance * votingPower) / 100);
 
-    payable(contributor).transfer(amount);
+    IERC20(EVE_TOKEN_ADDRESS).transfer(contributor, amount);
   }
 
   /**
@@ -141,9 +142,9 @@ contract CSProjectSystem is System {
    * @param projectId Identifier of the project.
    */
   function contribute(
-    bytes32 projectId
-  ) public payable notManager(projectId) notExpired(projectId) notArchived(projectId) {
-    uint256 amount = _msgValue();
+    bytes32 projectId,
+    uint256 amount
+  ) public notManager(projectId) notExpired(projectId) notArchived(projectId) {
     address contributor = _msgSender();
 
     uint256 target = ProjectsMetadataTable.getTarget(projectId);
@@ -156,10 +157,14 @@ contract CSProjectSystem is System {
     require(contribution == 0);
 
     // Makre sure the amount is above the threshold for this project.
-    require(_msgValue() >= threshold);
+    require(amount >= threshold);
 
     // Makes sure the contribution doesn't exceed the target.
     require(amount + balance <= target);
+
+    //Transfer tokens from user to this contract
+    IERC20(EVE_TOKEN_ADDRESS).approve(contributor, amount);
+    IERC20(EVE_TOKEN_ADDRESS).transferFrom(contributor, address(this), amount);
 
     // Compute the contribution data.
     uint32 votingPower = uint32(amount / target) * 100;
@@ -187,7 +192,7 @@ contract CSProjectSystem is System {
     uint256 amount,
     string memory title,
     string memory description
-  ) public manager(projectId) notExpired(projectId) notArchived(projectId) {
+  ) public onlyManager(projectId) notExpired(projectId) notArchived(projectId) {
     uint32 timestamp = uint32(block.timestamp);
     bytes32 requestId = keccak256(abi.encode(title));
 

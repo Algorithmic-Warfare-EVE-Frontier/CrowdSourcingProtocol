@@ -6,7 +6,8 @@
 
 /*
  * By default the template just creates a temporary wallet
- * (called a burner wallet).
+ * (called a burner wallet) and uses a faucet (on our test net)
+ * to get ETH for it.
  *
  * See https://mud.dev/tutorials/minimal/deploy#wallet-managed-address
  * for how to use the user's own address instead.
@@ -33,6 +34,7 @@ import worlds from "contracts/worlds.json";
  * See https://mud.dev/tutorials/minimal/deploy#run-the-user-interface
  * for instructions on how to add networks.
  */
+
 import { supportedChains } from "./supportedChains";
 
 export async function getNetworkConfig() {
@@ -46,7 +48,12 @@ export async function getNetworkConfig() {
    *    vite dev server was started or client was built
    * 4. The default, 31337 (anvil)
    */
-  const chainId = Number(params.get("chainId") || params.get("chainid") || import.meta.env.VITE_CHAIN_ID || 31337);
+  const chainId = Number(
+    params.get("chainId") ||
+      params.get("chainid") ||
+      import.meta.env.VITE_CHAIN_ID ||
+      31337
+  );
 
   /*
    * Find the chain (unless it isn't in the list of supported chains).
@@ -65,7 +72,9 @@ export async function getNetworkConfig() {
   const world = worlds[chain.id.toString()];
   const worldAddress = params.get("worldAddress") || world?.address;
   if (!worldAddress) {
-    throw new Error(`No world address found for chain ${chainId}. Did you run \`mud deploy\`?`);
+    throw new Error(
+      `No world address found for chain ${chainId}. Did you run \`mud deploy\`?`
+    );
   }
 
   /*
@@ -80,9 +89,11 @@ export async function getNetworkConfig() {
     : world?.blockNumber ?? 0n;
 
   return {
-    privateKey: getBurnerPrivateKey(),
+    privateKey:
+      "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d" /* getBurnerPrivateKey() */,
     chainId,
     chain,
+    faucetServiceUrl: params.get("faucet") ?? chain.faucetUrl,
     worldAddress,
     initialBlockNumber,
   };

@@ -1,22 +1,19 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.24;
+pragma solidity >=0.8.20;
 
 import { Script } from "forge-std/Script.sol";
 import { console } from "forge-std/console.sol";
-import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
-
+import { IBaseWorld } from "@latticexyz/world/src/codegen/interfaces/IBaseWorld.sol";
 import { IWorld } from "../src/codegen/world/IWorld.sol";
-
 import { ProjectsMetadataTable, ProjectsMetadataTableData, ProjectsDataTable, ProjectsDataTableData } from "../src/codegen/index.sol";
 
-contract PostDeploy is Script {
+contract CreateProject is Script {
   function run(address worldAddress) external {
-    // // Load the private key from the `PRIVATE_KEY` environment variable (in .env)
-    uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+    // Private Key loaded from environment
+    uint256 user1PrivateKey = vm.envUint("PRIVATE_KEY_1");
 
-    vm.startBroadcast(deployerPrivateKey);
+    vm.startBroadcast(user1PrivateKey);
 
-    // --------------
     uint32 threshold = 10;
     uint32 target = 100;
     uint32 deadline = uint32(block.timestamp + 5 days);
@@ -34,8 +31,6 @@ contract PostDeploy is Script {
     console.log("Description: ", projectData.description);
     console.log("Threshold: ", projectMetadata.threshold);
     console.log("Target: ", projectMetadata.target);
-
-    console.log("Hello world");
 
     vm.stopBroadcast();
   }

@@ -7,15 +7,15 @@ import { ProjectStatus, RequestStatus, ApprovalStatus, Vote } from "../codegen/c
 
 contract CSVoteSystem is System {
   // Scopes the function to the manager only.
-  modifier manager(bytes32 projectId) {
+  modifier onlyManager(bytes32 projectId) {
     address manager = ProjectsMetadataTable.getManager(projectId);
-    require(_msgSender() == manager);
+    require(manager == _msgSender());
 
     _;
   }
 
   // Gets the projectId associated to a requestId.
-  function projectIdFromRequestId(bytes32 requestId) internal returns (bytes32) {
+  function projectIdFromRequestId(bytes32 requestId) internal view returns (bytes32) {
     bytes32 projectId = RequestsMetadataTable.getProjectId(requestId);
     return projectId;
   }
@@ -36,7 +36,7 @@ contract CSVoteSystem is System {
   function approve(
     bytes32 requestId,
     string memory note
-  ) public manager(projectIdFromRequestId(requestId)) active(requestId) {
+  ) public onlyManager(projectIdFromRequestId(requestId)) active(requestId) {
     uint32 timestamp = uint32(block.timestamp);
     address contributor = _msgSender();
 
@@ -61,7 +61,7 @@ contract CSVoteSystem is System {
   function decline(
     bytes32 requestId,
     string memory note
-  ) public manager(projectIdFromRequestId(requestId)) active(requestId) {
+  ) public onlyManager(projectIdFromRequestId(requestId)) active(requestId) {
     address contributor = _msgSender();
     uint32 timestamp = uint32(block.timestamp);
 
@@ -69,8 +69,6 @@ contract CSVoteSystem is System {
     uint32 votingPower = ContributersTable.getVotingPower(projectId, contributor);
     uint32 denialRate = RequestsDataTable.getDenialRate(requestId) + votingPower;
     uint32 rejections = ProjectsDataTable.getRejections(projectId);
-
-    bytes32 voteId = keccak256(abi.encode(timestamp));
 
     VotesTable.set(requestId, contributor, timestamp, Vote.DECLINED, note);
 

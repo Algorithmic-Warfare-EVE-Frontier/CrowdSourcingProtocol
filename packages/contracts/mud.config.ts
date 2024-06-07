@@ -7,7 +7,7 @@ export default mudConfig({
     ApprovalStatus: ["REJECTED", "ACCEPTED", "PENDING"],
     Vote: ["APPROVED", "DECLINED"],
   },
-  namespace: "app",
+  namespace: "csp",
   tables: {
     ProjectsMetadataTable: {
       keySchema: {

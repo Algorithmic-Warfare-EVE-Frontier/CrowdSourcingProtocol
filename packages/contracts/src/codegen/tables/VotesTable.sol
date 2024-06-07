@@ -22,8 +22,8 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 // Import user types
 import { Vote } from "./../common.sol";
 
-// Hex below is the result of `WorldResourceIdLib.encode({ namespace: "app", name: "VotesTable", typeId: RESOURCE_TABLE });`
-ResourceId constant _tableId = ResourceId.wrap(0x74626170700000000000000000000000566f7465735461626c65000000000000);
+// Hex below is the result of `WorldResourceIdLib.encode({ namespace: "csp", name: "VotesTable", typeId: RESOURCE_TABLE });`
+ResourceId constant _tableId = ResourceId.wrap(0x74626373700000000000000000000000566f7465735461626c65000000000000);
 ResourceId constant VotesTableTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(

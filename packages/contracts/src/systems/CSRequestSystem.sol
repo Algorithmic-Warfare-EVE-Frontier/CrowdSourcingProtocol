@@ -7,7 +7,7 @@ import { RequestStatus, ApprovalStatus } from "../codegen/common.sol";
 
 contract CSRequestSystem is System {
   // Scopes the function to the manager only.
-  modifier manager(bytes32 projectId) {
+  modifier onlyManager(bytes32 projectId) {
     address manager = ProjectsMetadataTable.getManager(projectId);
     require(_msgSender() == manager);
 
@@ -15,7 +15,7 @@ contract CSRequestSystem is System {
   }
 
   // Gets the projectId associated to a requestId.
-  function projectIdFromRequestId(bytes32 requestId) internal returns (bytes32) {
+  function projectIdFromRequestId(bytes32 requestId) internal view returns (bytes32) {
     bytes32 projectId = RequestsMetadataTable.getProjectId(requestId);
     return projectId;
   }
@@ -33,7 +33,7 @@ contract CSRequestSystem is System {
    * Note: Can only be done by the manager.
    * @param requestId Identifier for the request.
    */
-  function cancel(bytes32 requestId) public manager(projectIdFromRequestId(requestId)) {
+  function cancel(bytes32 requestId) public onlyManager(projectIdFromRequestId(requestId)) {
     RequestsDataTable.setRequestStatus(requestId, RequestStatus.CANCELLED);
   }
 
@@ -41,7 +41,7 @@ contract CSRequestSystem is System {
    * Proceeds with an approved request.
    * @param requestId Identifier for the request.
    */
-  function proceed(bytes32 requestId) public manager(projectIdFromRequestId(requestId)) approved(requestId) {
+  function proceed(bytes32 requestId) public onlyManager(projectIdFromRequestId(requestId)) approved(requestId) {
     address contributor = _msgSender();
     uint256 amount = RequestsMetadataTable.getAmount(requestId);
 

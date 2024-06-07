@@ -19,8 +19,8 @@ import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
-// Hex below is the result of `WorldResourceIdLib.encode({ namespace: "app", name: "RequestsMetadata", typeId: RESOURCE_TABLE });`
-ResourceId constant _tableId = ResourceId.wrap(0x7462617070000000000000000000000052657175657374734d65746164617461);
+// Hex below is the result of `WorldResourceIdLib.encode({ namespace: "csp", name: "RequestsMetadata", typeId: RESOURCE_TABLE });`
+ResourceId constant _tableId = ResourceId.wrap(0x7462637370000000000000000000000052657175657374734d65746164617461);
 ResourceId constant RequestsMetadataTableTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(

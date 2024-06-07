@@ -8,22 +8,21 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface ICSProjectSystem {
-  function app__create(
+  function csp__create(
     uint32 threshold,
     uint32 target,
     uint32 deadline,
     string memory title,
-    string memory description,
-    bool optout
+    string memory description
   ) external;
 
-  function app__archive(bytes32 projectId) external;
+  function csp__archive(bytes32 projectId) external;
 
-  function app__claim(bytes32 projectId) external;
+  function csp__claim(bytes32 projectId) external;
 
-  function app__contribute(bytes32 projectId) external payable;
+  function csp__contribute(bytes32 projectId, uint256 amount) external;
 
-  function app__request(
+  function csp__request(
     bytes32 projectId,
     address recepient,
     uint256 amount,

@@ -22,8 +22,8 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 // Import user types
 import { RequestStatus, ApprovalStatus } from "./../common.sol";
 
-// Hex below is the result of `WorldResourceIdLib.encode({ namespace: "app", name: "RequestsDataTabl", typeId: RESOURCE_TABLE });`
-ResourceId constant _tableId = ResourceId.wrap(0x746261707000000000000000000000005265717565737473446174615461626c);
+// Hex below is the result of `WorldResourceIdLib.encode({ namespace: "csp", name: "RequestsDataTabl", typeId: RESOURCE_TABLE });`
+ResourceId constant _tableId = ResourceId.wrap(0x746263737000000000000000000000005265717565737473446174615461626c);
 ResourceId constant RequestsDataTableTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
