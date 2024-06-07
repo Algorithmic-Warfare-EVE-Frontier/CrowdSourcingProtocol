@@ -1,0 +1,9 @@
+- [ ] Phase 0: Localnet Dev
+  - [>] `mud.config.ts`, adding tables in the namespace, [see schema](obsidian://open?vault=Thoughtfolio&file=Attachments%2FProject%20Awakening%20Hackathon%20Proposal%201%2Fmedia%2FProject%20Awakening%20Hackathon%20Proposal%201%202024-06-06%2017.07.23.excalidraw).
+  - [*] Write the interface for the systems.
+    - [ ] `CSContributionSystem`, a factory of modified-ERC20 tokens meant to represent support for a certain vision.
+    - [>] `CSProjectSystem`, create, manage and interact with players projects.
+    - [ ] `CSRequestSystem`, create and handle project-related requests.
+    - [ ] `CSVoteSystem`, an interface to register approvals and refusals.
+- [ ] Phase 1: Testnet Dev
+- [ ] Phase 2: Maintenance
