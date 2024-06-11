@@ -16,22 +16,23 @@ import { Schema } from "@latticexyz/store/src/Schema.sol";
 import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/EncodedLengths.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
-struct CSProjectsMetadataTableData {
-  uint256 createdAt;
-  uint256 modifiedAt;
+struct CSPotentialsTableData {
+  bytes32 vectorId;
+  address source;
+  uint256 strength;
 }
 
-library CSProjectsMetadataTable {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "csp", name: "CSProjectsMetada", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x74626373700000000000000000000000435350726f6a656374734d6574616461);
+library CSPotentialsTable {
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "csp", name: "CSPotentialsTabl", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x746263737000000000000000000000004353506f74656e7469616c735461626c);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0040020020200000000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0054030020142000000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes32)
   Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint256, uint256)
-  Schema constant _valueSchema = Schema.wrap(0x004002001f1f0000000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (bytes32, address, uint256)
+  Schema constant _valueSchema = Schema.wrap(0x005403005f611f00000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -47,9 +48,10 @@ library CSProjectsMetadataTable {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](2);
-    fieldNames[0] = "createdAt";
-    fieldNames[1] = "modifiedAt";
+    fieldNames = new string[](3);
+    fieldNames[0] = "vectorId";
+    fieldNames[1] = "source";
+    fieldNames[2] = "strength";
   }
 
   /**
@@ -67,93 +69,135 @@ library CSProjectsMetadataTable {
   }
 
   /**
-   * @notice Get createdAt.
+   * @notice Get vectorId.
    */
-  function getCreatedAt(bytes32 id) internal view returns (uint256 createdAt) {
+  function getVectorId(bytes32 id) internal view returns (bytes32 vectorId) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (uint256(bytes32(_blob)));
+    return (bytes32(_blob));
   }
 
   /**
-   * @notice Get createdAt.
+   * @notice Get vectorId.
    */
-  function _getCreatedAt(bytes32 id) internal view returns (uint256 createdAt) {
+  function _getVectorId(bytes32 id) internal view returns (bytes32 vectorId) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (uint256(bytes32(_blob)));
+    return (bytes32(_blob));
   }
 
   /**
-   * @notice Set createdAt.
+   * @notice Set vectorId.
    */
-  function setCreatedAt(bytes32 id, uint256 createdAt) internal {
+  function setVectorId(bytes32 id, bytes32 vectorId) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((createdAt)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((vectorId)), _fieldLayout);
   }
 
   /**
-   * @notice Set createdAt.
+   * @notice Set vectorId.
    */
-  function _setCreatedAt(bytes32 id, uint256 createdAt) internal {
+  function _setVectorId(bytes32 id, bytes32 vectorId) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((createdAt)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((vectorId)), _fieldLayout);
   }
 
   /**
-   * @notice Get modifiedAt.
+   * @notice Get source.
    */
-  function getModifiedAt(bytes32 id) internal view returns (uint256 modifiedAt) {
+  function getSource(bytes32 id) internal view returns (address source) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
-    return (uint256(bytes32(_blob)));
+    return (address(bytes20(_blob)));
   }
 
   /**
-   * @notice Get modifiedAt.
+   * @notice Get source.
    */
-  function _getModifiedAt(bytes32 id) internal view returns (uint256 modifiedAt) {
+  function _getSource(bytes32 id) internal view returns (address source) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
+    return (address(bytes20(_blob)));
+  }
+
+  /**
+   * @notice Set source.
+   */
+  function setSource(bytes32 id, address source) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((source)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set source.
+   */
+  function _setSource(bytes32 id, address source) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((source)), _fieldLayout);
+  }
+
+  /**
+   * @notice Get strength.
+   */
+  function getStrength(bytes32 id) internal view returns (uint256 strength) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
     return (uint256(bytes32(_blob)));
   }
 
   /**
-   * @notice Set modifiedAt.
+   * @notice Get strength.
    */
-  function setModifiedAt(bytes32 id, uint256 modifiedAt) internal {
+  function _getStrength(bytes32 id) internal view returns (uint256 strength) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((modifiedAt)), _fieldLayout);
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    return (uint256(bytes32(_blob)));
   }
 
   /**
-   * @notice Set modifiedAt.
+   * @notice Set strength.
    */
-  function _setModifiedAt(bytes32 id, uint256 modifiedAt) internal {
+  function setStrength(bytes32 id, uint256 strength) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((modifiedAt)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((strength)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set strength.
+   */
+  function _setStrength(bytes32 id, uint256 strength) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((strength)), _fieldLayout);
   }
 
   /**
    * @notice Get the full data.
    */
-  function get(bytes32 id) internal view returns (CSProjectsMetadataTableData memory _table) {
+  function get(bytes32 id) internal view returns (CSPotentialsTableData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
@@ -168,7 +212,7 @@ library CSProjectsMetadataTable {
   /**
    * @notice Get the full data.
    */
-  function _get(bytes32 id) internal view returns (CSProjectsMetadataTableData memory _table) {
+  function _get(bytes32 id) internal view returns (CSPotentialsTableData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
@@ -183,8 +227,8 @@ library CSProjectsMetadataTable {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 id, uint256 createdAt, uint256 modifiedAt) internal {
-    bytes memory _staticData = encodeStatic(createdAt, modifiedAt);
+  function set(bytes32 id, bytes32 vectorId, address source, uint256 strength) internal {
+    bytes memory _staticData = encodeStatic(vectorId, source, strength);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -198,8 +242,8 @@ library CSProjectsMetadataTable {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 id, uint256 createdAt, uint256 modifiedAt) internal {
-    bytes memory _staticData = encodeStatic(createdAt, modifiedAt);
+  function _set(bytes32 id, bytes32 vectorId, address source, uint256 strength) internal {
+    bytes memory _staticData = encodeStatic(vectorId, source, strength);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -213,8 +257,8 @@ library CSProjectsMetadataTable {
   /**
    * @notice Set the full data using the data struct.
    */
-  function set(bytes32 id, CSProjectsMetadataTableData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.createdAt, _table.modifiedAt);
+  function set(bytes32 id, CSPotentialsTableData memory _table) internal {
+    bytes memory _staticData = encodeStatic(_table.vectorId, _table.source, _table.strength);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -228,8 +272,8 @@ library CSProjectsMetadataTable {
   /**
    * @notice Set the full data using the data struct.
    */
-  function _set(bytes32 id, CSProjectsMetadataTableData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.createdAt, _table.modifiedAt);
+  function _set(bytes32 id, CSPotentialsTableData memory _table) internal {
+    bytes memory _staticData = encodeStatic(_table.vectorId, _table.source, _table.strength);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;
@@ -243,10 +287,12 @@ library CSProjectsMetadataTable {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(bytes memory _blob) internal pure returns (uint256 createdAt, uint256 modifiedAt) {
-    createdAt = (uint256(Bytes.getBytes32(_blob, 0)));
+  function decodeStatic(bytes memory _blob) internal pure returns (bytes32 vectorId, address source, uint256 strength) {
+    vectorId = (Bytes.getBytes32(_blob, 0));
 
-    modifiedAt = (uint256(Bytes.getBytes32(_blob, 32)));
+    source = (address(Bytes.getBytes20(_blob, 32)));
+
+    strength = (uint256(Bytes.getBytes32(_blob, 52)));
   }
 
   /**
@@ -259,8 +305,8 @@ library CSProjectsMetadataTable {
     bytes memory _staticData,
     EncodedLengths,
     bytes memory
-  ) internal pure returns (CSProjectsMetadataTableData memory _table) {
-    (_table.createdAt, _table.modifiedAt) = decodeStatic(_staticData);
+  ) internal pure returns (CSPotentialsTableData memory _table) {
+    (_table.vectorId, _table.source, _table.strength) = decodeStatic(_staticData);
   }
 
   /**
@@ -287,8 +333,8 @@ library CSProjectsMetadataTable {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(uint256 createdAt, uint256 modifiedAt) internal pure returns (bytes memory) {
-    return abi.encodePacked(createdAt, modifiedAt);
+  function encodeStatic(bytes32 vectorId, address source, uint256 strength) internal pure returns (bytes memory) {
+    return abi.encodePacked(vectorId, source, strength);
   }
 
   /**
@@ -298,10 +344,11 @@ library CSProjectsMetadataTable {
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(
-    uint256 createdAt,
-    uint256 modifiedAt
+    bytes32 vectorId,
+    address source,
+    uint256 strength
   ) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
-    bytes memory _staticData = encodeStatic(createdAt, modifiedAt);
+    bytes memory _staticData = encodeStatic(vectorId, source, strength);
 
     EncodedLengths _encodedLengths;
     bytes memory _dynamicData;

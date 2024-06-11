@@ -20,7 +20,8 @@
     "@latticexyz/schema-type": "2.0.12",
     "@latticexyz/store": "2.0.12",
     "@latticexyz/world": "2.0.12",
-    "@latticexyz/world-modules": "2.0.12"
+    "@latticexyz/world-modules": "2.0.12",
+    "openzeppelin-solidity": "^3.4.2"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",

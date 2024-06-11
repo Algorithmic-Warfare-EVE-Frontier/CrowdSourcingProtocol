@@ -2,6 +2,7 @@
 solc = "0.8.24"
 ffi = false
 fuzz_runs = 256
+viaIR=true
 optimizer = true
 optimizer_runs = 3000
 verbosity = 2

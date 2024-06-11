@@ -3,8 +3,12 @@
  * for changes in the World state (using the System contracts).
  */
 
-import { Hex } from "viem";
+// import { Hex } from "viem";
 import { SetupNetworkResult } from "./setupNetwork";
+
+import { IVectorFormInput } from "../components/forms/Vector";
+import { terminal } from "virtual:terminal";
+import { waitForTransactionReceipt } from "viem/actions";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -28,29 +32,33 @@ export function createSystemCalls(
    *   syncToRecs
    *   (https://github.com/latticexyz/mud/blob/main/templates/react/packages/client/src/mud/setupNetwork.ts#L77-L83).
    */
-  { tables, useStore, worldContract, waitForTransaction }: SetupNetworkResult,
+  { tables, useStore, worldContract, waitForTransaction }: SetupNetworkResult
 ) {
-  const addTask = async (label: string) => {
-    const tx = await worldContract.write.app__addTask([label]);
-    await waitForTransaction(tx);
-  };
+  const createVector = async (data: IVectorFormInput) => {
+    const {
+      symbol,
+      codename,
+      threshold,
+      target,
+      deadline,
+      title,
+      description,
+    } = data;
+    const tx1 = await worldContract.write.csp__initiateVector([
+      symbol,
+      codename,
+    ]);
+    await waitForTransaction(tx1);
 
-  const toggleTask = async (id: Hex) => {
-    const isComplete = (useStore.getState().getValue(tables.Tasks, { id })?.completedAt ?? 0n) > 0n;
-    const tx = isComplete
-      ? await worldContract.write.app__resetTask([id])
-      : await worldContract.write.app__completeTask([id]);
-    await waitForTransaction(tx);
-  };
-
-  const deleteTask = async (id: Hex) => {
-    const tx = await worldContract.write.app__deleteTask([id]);
-    await waitForTransaction(tx);
+    // const tx2 = await worldContract.write.csp__registerVectorLimits([
+    //   threshold,
+    //   target,
+    //   deadline,
+    // ]);
+    // await waitForTransaction(tx2);
   };
 
   return {
-    addTask,
-    toggleTask,
-    deleteTask,
+    createVector,
   };
 }
