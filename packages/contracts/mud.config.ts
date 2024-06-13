@@ -1,6 +1,6 @@
-import { defineWorld } from "@latticexyz/world";
+import { mudConfig } from "@latticexyz/world/register";
 
-export default defineWorld({
+export default mudConfig({
   enums: {
     VectorStatus: ["CHANNELING", "DISCHARGING", "ARCHIVED"],
     MotionStatus: ["PENDING", "PROCEEDING", "HALTING", "CANCELLED"],
@@ -10,8 +10,7 @@ export default defineWorld({
   tables: {
     // Projects
     CSVectorsTable: {
-      schema: {
-        id: "bytes32",
+      valueSchema: {
         handler: "address",
         charge: "uint256",
         capacity: "uint256",
@@ -19,18 +18,20 @@ export default defineWorld({
         status: "VectorStatus",
         insight: "string",
       },
-      key: ["id"],
+      keySchema: {
+        id: "bytes32",
+      },
     },
     CSVectorMotionsLookupTable: {
-      schema: {
-        vectorId: "bytes32",
+      valueSchema: {
         motionIds: "bytes32[]",
       },
-      key: ["vectorId"],
+      keySchema: {
+        vectorId: "bytes32",
+      },
     },
     CSMotionsTable: {
-      schema: {
-        id: "bytes32",
+      valueSchema: {
         vectorId: "bytes32",
         target: "address",
         momentum: "uint256",
@@ -38,43 +39,49 @@ export default defineWorld({
         pull: "uint256",
         lifetime: "uint256",
         status: "MotionStatus",
-        insight: "string"
+        insight: "string",
       },
-      key: ["id"],
+      keySchema: {
+        id: "bytes32",
+      },
     },
     CSMotionForcesLookupTable: {
-      schema: {
-        motionId: "bytes32",
+      valueSchema: {
         forceIds: "bytes32[]",
       },
-      key: ["motionId"],
+      keySchema: {
+        motionId: "bytes32",
+      },
     },
     CSForcesTable: {
-      schema: {
-        id: "bytes32",
+      valueSchema: {
         motionId: "bytes32",
         potentialId: "bytes32",
         power: "uint256",
         direction: "ForceDirection",
         insight: "string",
       },
-      key: ["id"],
+      keySchema: {
+        id: "bytes32",
+      },
     },
     CSPotentialsTable: {
-      schema: {
-        id: "bytes32",
+      valueSchema: {
         vectorId: "bytes32",
         source: "address",
         strength: "uint256",
       },
-      key: ["id"],
+      keySchema: {
+        id: "bytes32",
+      },
     },
     CSVectorPotentialsLookupTable: {
-      schema: {
-        vectorId: "bytes32",
+      valueSchema: {
         potentialIds: "bytes32[]",
       },
-      key: ["vectorId"],
+      keySchema: {
+        vectorId: "bytes32",
+      },
     },
   },
 });

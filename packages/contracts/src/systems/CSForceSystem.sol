@@ -50,7 +50,7 @@ contract CSForceSystem is CSSystem {
       })
     );
 
-    CSMotionForcesLookupTable.pushForceIds(motionId, forceId);
+    CSMotionForcesLookupTable.push(motionId, forceId);
 
     return forceId;
   }

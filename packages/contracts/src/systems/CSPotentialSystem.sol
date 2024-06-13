@@ -23,7 +23,7 @@ contract CSPotentialSystem is CSSystem {
       CSPotentialsTableData({ source: source, strength: strength, vectorId: vectorId })
     );
 
-    CSVectorPotentialsLookupTable.pushPotentialIds(vectorId, potentialId);
+    CSVectorPotentialsLookupTable.push(vectorId, potentialId);
     CSVectorsTable.setCharge(vectorId, vector.charge + strength);
 
     if (vector.charge + strength == vector.capacity) {

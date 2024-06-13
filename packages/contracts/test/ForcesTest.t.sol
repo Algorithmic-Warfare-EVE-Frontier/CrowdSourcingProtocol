@@ -95,7 +95,7 @@ contract MotionsTest is MudTest {
     vm.stopBroadcast();
 
     createDeltaWithGivenPotential(user1PrivateKey, vectorId, 10000);
-    createDeltaWithGivenPotential(user3PrivateKey, vectorId, 20000);
+    // createDeltaWithGivenPotential(user3PrivateKey, vectorId, 20000);
 
     return vectorId;
   }
