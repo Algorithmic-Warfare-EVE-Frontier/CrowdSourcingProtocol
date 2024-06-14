@@ -1,22 +1,31 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-// import "@openzeppelin/contracts/math/SafeMath.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 
 import { CSVectorsTable, CSVectorsTableData, CSVectorPotentialsLookupTable, CSVectorPotentialsLookupTable, CSForcesTable, CSForcesTableData, CSMotionsTable, CSMotionsTableData, CSMotionForcesLookupTable, CSMotionForcesLookupTable, CSVectorPotentialsLookupTable, CSPotentialsTable, CSPotentialsTableData } from "../codegen/index.sol";
 
 import { VectorStatus, MotionStatus } from "../codegen/common.sol";
 
+/**
+ * @title Crowd Sourcing Protocol Base System
+ * @author Abderraouf "k-symplex" Belalia<abderraoufbelalia@symplectic.link>
+ * @notice This defines the base helper functions and modifiers for the high-level systems.
+ */
 contract CSSystem is System {
-  //using SafeMath for uint256;
-
+  /**
+   * This makes sure that only the handler of the vector performs an action.
+   */
   modifier onlyHandler(bytes32 vectorId) {
     address user = tx.origin;
     CSVectorsTableData memory vector = CSVectorsTable.get(vectorId);
     require(user == vector.handler, "Reserved for vector handler only.");
     _;
   }
+
+  /**
+   * This makes sure that anyone beside the handler can perform an action.
+   */
   modifier notHandler(bytes32 vectorId) {
     address user = tx.origin;
     CSVectorsTableData memory vector = CSVectorsTable.get(vectorId);
@@ -24,6 +33,9 @@ contract CSSystem is System {
     _;
   }
 
+  /**
+   * This makes sure that only the handler of the vector performs an action.
+   */
   modifier onlyPotential(bytes32 vectorId) {
     address user = tx.origin;
     bytes32 potentialId;
@@ -43,29 +55,45 @@ contract CSSystem is System {
     _;
   }
 
+  /**
+   * This makes sure that the vector has not been archived.
+   */
   modifier notArchived(bytes32 vectorId) {
     CSVectorsTableData memory vector = CSVectorsTable.get(vectorId);
     require(vector.status != VectorStatus.ARCHIVED, "Requires vector to not be archived");
     _;
   }
+
+  /**
+   * Make sure that the vector has been archived.
+   */
   modifier onlyArchived(bytes32 vectorId) {
     CSVectorsTableData memory vector = CSVectorsTable.get(vectorId);
     require(vector.status == VectorStatus.ARCHIVED, "Requires vector to be archived.");
     _;
   }
 
+  /**
+   * Make sure that the vector is discharging, meaning that it did hit full charge capacity and that the handler is pulling token via motions.
+   */
   modifier whenDischarging(bytes32 vectorId) {
     CSVectorsTableData memory vector = CSVectorsTable.get(vectorId);
     require(vector.status == VectorStatus.DISCHARGING, "Requires vector to be dicharging.");
     _;
   }
 
+  /**
+   * Make sure that the vector is channeling, meaning that it did not hit full charge capacity.
+   */
   modifier whenChanneling(bytes32 vectorId) {
     CSVectorsTableData memory vector = CSVectorsTable.get(vectorId);
     require(vector.status == VectorStatus.CHANNELING, "Requires vector to be channeling.");
     _;
   }
 
+  /**
+   * Makes sure that the potential is not overloading the vector.
+   */
   modifier withCapacityThreshold(bytes32 vectorId, uint256 strength) {
     CSVectorsTableData memory vector = CSVectorsTable.get(vectorId);
     require(
@@ -75,18 +103,27 @@ contract CSSystem is System {
     _;
   }
 
+  /**
+   * Make sure the motion hasn't been cancelled.
+   */
   modifier notCancelled(bytes32 motionId) {
     CSMotionsTableData memory motion = CSMotionsTable.get(motionId);
     require(motion.status != MotionStatus.CANCELLED, "Requires motion to not be cancelled.");
     _;
   }
 
+  /**
+   * Make sure the motion is in progress.
+   */
   modifier onlyPending(bytes32 motionId) {
     CSMotionsTableData memory motion = CSMotionsTable.get(motionId);
     require(motion.status == MotionStatus.PENDING, "Requires motion to be pending.");
     _;
   }
 
+  /**
+   * Make sure the motion is proceeding.
+   */
   modifier onlyProceeding(bytes32 motionId) {
     CSMotionsTableData memory motion = CSMotionsTable.get(motionId);
     require(motion.status == MotionStatus.PROCEEDING, "Requires motion to be proceeding.");
@@ -97,6 +134,7 @@ contract CSSystem is System {
    * This extracts the vectorId associated to a provided motion.
    * @param motionId Identifier of the motion.
    */
+  // ISSUE this somewhat causes the compilation to fail.
   // function computeTangent(bytes32 motionId) public returns (bytes32) {
   //   CSMotionsTableData memory motion = CSMotionsTable.get(motionId);
   //   return motion.vectorId;

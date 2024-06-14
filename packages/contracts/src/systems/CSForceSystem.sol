@@ -6,9 +6,20 @@ import { CSVectorsTable, CSVectorsTableData, CSForcesTable, CSForcesTableData, C
 import { MotionStatus, ForceDirection } from "../codegen/common.sol";
 import { CSAddressUtils } from "./shared.sol";
 
+/**
+ * @title Crowd Sourcing Protocol - Force System
+ * @author Abderraouf "k-symplex" Belalia<abderraoufbelalia@symplectic.link>
+ * @notice This system defines the main API of force handling.
+ */
 contract CSForceSystem is CSSystem {
   using CSAddressUtils for address;
 
+  /**
+   * Apply force on an issued motion.
+   * @param motionId Identifier of the motion.
+   * @param direction Whether you support or oppose the motion.
+   * @param insight A note to justify your action.
+   */
   function applyForce(
     bytes32 motionId,
     ForceDirection direction,
@@ -20,7 +31,7 @@ contract CSForceSystem is CSSystem {
 
     bytes32 vectorId = CSMotionsTable.getVectorId(motionId);
 
-    bytes32 potentialId = source.getPotential(vectorId);
+    bytes32 potentialId = source.getPotentialId(vectorId);
     CSPotentialsTableData memory potential = CSPotentialsTable.get(potentialId);
     CSVectorsTableData memory vector = CSVectorsTable.get(vectorId);
     CSMotionsTableData memory motion = CSMotionsTable.get(motionId);

@@ -2,6 +2,7 @@
   "name": "mud-template-react",
   "private": true,
   "scripts": {
+    "start:world": "cd ../world-chain-contracts/ && pnpm run dev",
     "build": "pnpm recursive run build",
     "dev": "mprocs",
     "dev:client": "pnpm --filter 'client' run dev",

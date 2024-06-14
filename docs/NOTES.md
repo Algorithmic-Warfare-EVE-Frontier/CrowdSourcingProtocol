@@ -1,16 +1,11 @@
 # Backend Notes
 
+*Need to bring my notes from obsidian to here.*
+
 ---
 # Frontend Notes
 
 
-# [SOLVED] Issue 1: Bad Display
-
-Replace, `'./../shared/ui-components/*/*.{js,ts,jsx,tsx}',` with `"./node_modules/@eveworld/ui-components/*/*.{js,ts,jsx,tsx}",`, in the `tailwind.config.js`.
-
-Explanation:
-
-The default path doesn't reference the components provided by `@eveworld/ui-components` correctly.
 
 # `WalletProvider`
 
@@ -66,3 +61,12 @@ You can pass the SOID in the url while accessing the DApp using the param, `http
 When you do this the provider will pull information about that specific object from the Testnet.
 
 Maybe I can make it work localhost?
+
+---
+#### [SOLVED] Issue 1: Bad Display
+
+Replace, `'./../shared/ui-components/*/*.{js,ts,jsx,tsx}',` with `"./node_modules/@eveworld/ui-components/*/*.{js,ts,jsx,tsx}",`, in the `tailwind.config.js`.
+
+Explanation:
+
+The default path doesn't reference the components provided by `@eveworld/ui-components` correctly.

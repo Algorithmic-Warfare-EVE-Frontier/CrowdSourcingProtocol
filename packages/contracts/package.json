@@ -4,16 +4,19 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "sync:world": "JSON_KEY='address'; ENV_VARIABLE='LOCAL_WORLD_ADDRESS'; VALUE=$(jq -r \".[\\\"31337\\\"].$JSON_KEY\" ../../../world-chain-contracts/mud-contracts/world/worlds.json); grep -q \"^$ENV_VARIABLE=\" .env && sed -i \"s/^$ENV_VARIABLE=.*/$ENV_VARIABLE=$VALUE/\" .env || echo \"$ENV_VARIABLE=$VALUE\" >> .env",
     "build": "mud build",
     "clean": "forge clean && rimraf src/codegen",
     "deploy:garnet": "mud deploy --profile=garnet",
+    "deploy:local-world": ". ./.env && pnpm run sync:world && mud deploy --worldAddress $LOCAL_WORLD_ADDRESS",
     "deploy:local": "mud deploy",
     "deploy:redstone": "mud deploy --profile=redstone",
     "dev": "mud dev-contracts",
     "lint": "pnpm run prettier && pnpm run solhint",
     "prettier": "prettier --write 'src/**/*.sol'",
     "solhint": "solhint --config ./.solhint.json 'src/**/*.sol' --fix",
-    "test": "tsc --noEmit && mud test"
+    "test": "tsc --noEmit && mud test",
+    "script:createAndMintERC20": ". ./.env && pnpm forge script ./script/CreateMintERC20.s.sol:CreateMintERC20 --broadcast --rpc-url $LOCAL_RPC_URL --chain-id $LOCAL_CHAIN_ID --sig \"run(address)\" $LOCAL_WORLD_ADDRESS -vvv"
   },
   "dependencies": {
     "@latticexyz/cli": "2.0.0-next-17-awakening-9c07ab3a2",
