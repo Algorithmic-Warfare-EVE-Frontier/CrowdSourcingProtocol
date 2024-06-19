@@ -55,7 +55,7 @@ contract CSMotionSystem is CSSystem {
     CSMotionsTableData memory motion = CSMotionsTable.get(motionId);
     CSVectorsTableData memory vector = CSVectorsTable.get(motion.vectorId);
 
-    // erc20.transfer(motion.target, motion.momentum);
+    transfer(motion.momentum, motion.target);
     CSVectorsTable.setCharge(motion.vectorId, vector.charge - motion.momentum);
   }
 

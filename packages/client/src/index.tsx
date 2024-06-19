@@ -34,7 +34,6 @@ setup().then(async (result) => {
       </WorldProvider>
     </WalletProvider>
   );
-
   // https://vitejs.dev/guide/env-and-mode.html
   if (import.meta.env.DEV) {
     const { mount: mountDevTools } = await import("@latticexyz/dev-tools");

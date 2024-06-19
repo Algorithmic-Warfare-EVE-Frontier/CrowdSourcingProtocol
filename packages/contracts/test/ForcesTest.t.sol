@@ -68,7 +68,7 @@ contract MotionsTest is MudTest {
     vm.startBroadcast(privateKey);
     // -------------------------------------
 
-    IWorld(worldAddress).csp__createDelta(vectorId, strength);
+    IWorld(worldAddress).csp__storeEnergy(vectorId, strength);
 
     // -------------------------------------
     vm.stopBroadcast();

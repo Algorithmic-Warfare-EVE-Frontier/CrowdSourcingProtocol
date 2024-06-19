@@ -2,30 +2,32 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useMUD } from "../../../MUDContext";
 import { Hex } from "viem";
 
-export interface IPotentialForm {
+interface Props {
   vectorId: Hex;
+}
+
+interface IPotentialForm {
   strength: bigint;
 }
 
-export default function PotentialForm() {
+export type PotentialParams = IPotentialForm & Props;
+
+export default function PotentialForm({ vectorId }: Props) {
   const { register, handleSubmit } = useForm<IPotentialForm>();
   const {
     systemCalls: { createDelta },
   } = useMUD();
 
   const onSubmit: SubmitHandler<IPotentialForm> = async (data) => {
-    console.log(data);
-    await createDelta(data);
+    await createDelta({
+      vectorId,
+      ...data,
+    });
   };
 
   return (
     <div className="Quantum-Container font-semibold">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label className=" ">Vector ID</label>
-        <input
-          {...register("vectorId")}
-          className="border border-brightquantum bg-crude"
-        />
         <div className=" grid grid-cols-2 gap-4">
           <label className=" ">Strength</label>
           <input

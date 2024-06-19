@@ -4,9 +4,14 @@
  */
 
 import { SetupNetworkResult } from "./setupNetwork";
-import { IVectorForm } from "../components/csp/forms/VectorForm";
-import { IPotentialForm } from "../components/csp/forms/PotentialForm";
-import { hexToBytes } from "viem";
+import { Address, Hex } from "viem";
+
+import type {
+  VectorParams,
+  MotionParams,
+  PotentialParams,
+  ForceParams,
+} from "../components/csp/forms";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -32,7 +37,7 @@ export function createSystemCalls(
    */
   { worldContract, waitForTransaction }: SetupNetworkResult
 ) {
-  const initiateVector = async (data: IVectorForm) => {
+  const initiateVector = async (data: VectorParams) => {
     const { capacity, lifetime, insight } = data;
     const tx = await worldContract.write.csp__initiateVector([
       capacity,
@@ -42,13 +47,71 @@ export function createSystemCalls(
     await waitForTransaction(tx);
   };
 
-  const createDelta = async (data: IPotentialForm) => {
-    const { vectorId, strength } = data;
-    const tx = await worldContract.write.csp__createDelta([vectorId, strength]);
+  const archiveVector = async (vectorId: Hex) => {
+    const tx = await worldContract.write.csp__archiveVector([vectorId]);
     await waitForTransaction(tx);
   };
+
+  const transferVector = async (vectorId: Hex, newHolder: Address) => {
+    const tx = await worldContract.write.csp__transferVector([
+      vectorId,
+      newHolder,
+    ]);
+    await waitForTransaction(tx);
+  };
+
+  const createDelta = async (data: PotentialParams) => {
+    const { vectorId, strength } = data;
+    const tx = await worldContract.write.csp__storeEnergy([vectorId, strength]);
+    await waitForTransaction(tx);
+  };
+
+  const releaseHeat = async (vectorId: Hex) => {
+    const tx = await worldContract.write.csp__releaseEnergy([vectorId]);
+    await waitForTransaction(tx);
+  };
+
+  const initiateMotion = async (data: MotionParams) => {
+    const { vectorId, momentum, lifetime, target, insight } = data;
+    const tx = await worldContract.write.csp__initiateMotion([
+      vectorId,
+      momentum,
+      lifetime,
+      target,
+      insight,
+    ]);
+    await waitForTransaction(tx);
+  };
+
+  const executeMotion = async (motionId: Hex) => {
+    const tx = await worldContract.write.csp__executeMotion([motionId]);
+    await waitForTransaction(tx);
+  };
+
+  const cancelMotion = async (motionId: Hex) => {
+    const tx = await worldContract.write.csp__cancelMotion([motionId]);
+    await waitForTransaction(tx);
+  };
+
+  const applyForce = async (data: ForceParams) => {
+    const { motionId, direction, insight } = data;
+    const tx = await worldContract.write.csp__applyForce([
+      motionId,
+      direction,
+      insight,
+    ]);
+    await waitForTransaction(tx);
+  };
+
   return {
     initiateVector,
+    archiveVector,
+    transferVector,
     createDelta,
+    releaseHeat,
+    initiateMotion,
+    cancelMotion,
+    executeMotion,
+    applyForce,
   };
 }

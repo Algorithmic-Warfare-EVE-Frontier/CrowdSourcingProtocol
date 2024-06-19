@@ -36,8 +36,8 @@ export default function App() {
         isStyled={false}
       />
 
-      <div className="bg-crude-5 -z-10 w-screen min-h-screen">
-        <div className="flex flex-col Absolute-Center max-w-[560px] mobile:max-w-[377px] mx-auto mb-6 h-screen">
+      <div className="bg-crude-5 -z-10 w-screen min-h-screen ">
+        <div className="flex flex-col max-w-[560px] Absolute-Center mobile:max-w-[377px] mx-auto mb-6 h-screen ">
           <Outlet />
         </div>
       </div>

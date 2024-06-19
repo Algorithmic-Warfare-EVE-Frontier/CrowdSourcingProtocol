@@ -6,7 +6,7 @@
   "scripts": {
     "build": "mud build",
     "clean": "forge clean && rimraf src/codegen",
-    "deploy:local": "pnpm run build && mud deploy",
+    "deploy:local": "pnpm run build && mud deploy --alwaysRunPostDeploy",
     "deploy:testnet": "pnpm run build && mud deploy --profile=lattice-testnet",
     "dev": "pnpm mud dev-contracts",
     "lint": "pnpm run prettier && pnpm run solhint",

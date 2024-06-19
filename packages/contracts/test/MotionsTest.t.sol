@@ -110,7 +110,7 @@ contract MotionsTest is MudTest {
     vm.startBroadcast(user1PrivateKey);
     // -------------------------------------
 
-    IWorld(worldAddress).csp__createDelta(vectorId, 10000);
+    IWorld(worldAddress).csp__storeEnergy(vectorId, 10000);
 
     // -------------------------------------
     vm.stopBroadcast();
@@ -118,7 +118,7 @@ contract MotionsTest is MudTest {
     vm.startBroadcast(user2PrivateKey);
     // -------------------------------------
 
-    IWorld(worldAddress).csp__createDelta(vectorId, 20000);
+    IWorld(worldAddress).csp__storeEnergy(vectorId, 20000);
 
     // -------------------------------------
     vm.stopBroadcast();

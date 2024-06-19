@@ -21,7 +21,7 @@ contract MotionsTest is MudTest {
     // Given
 
     // When
-    bytes32 potentialId = IWorld(worldAddress).csp__createDelta(vectorId, 10000);
+    bytes32 potentialId = IWorld(worldAddress).csp__storeEnergy(vectorId, 10000);
 
     CSVectorsTableData memory vector = CSVectorsTable.get(vectorId);
     CSPotentialsTableData memory potential = CSPotentialsTable.get(potentialId);
@@ -48,7 +48,7 @@ contract MotionsTest is MudTest {
 
     // Given
     vm.startBroadcast(potentialPrivateKey);
-    IWorld(worldAddress).csp__createDelta(vectorId, 10000);
+    IWorld(worldAddress).csp__storeEnergy(vectorId, 10000);
     vm.stopBroadcast();
 
     vm.startBroadcast(initiatorPrivateKey);
@@ -57,7 +57,7 @@ contract MotionsTest is MudTest {
 
     // When
     vm.startBroadcast(potentialPrivateKey);
-    IWorld(worldAddress).csp__releaseHeat(vectorId);
+    IWorld(worldAddress).csp__releaseEnergy(vectorId);
     vm.stopBroadcast();
 
     // Then

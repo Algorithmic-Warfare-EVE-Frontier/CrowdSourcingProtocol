@@ -21,7 +21,7 @@ contract CSPotentialSystem is CSSystem {
    *
    * @notice Here a "delta" means a difference of potential, because the fact that you contributed to a given a vector and not another amounts to a polarization in the landscape of ideas.
    */
-  function createDelta(
+  function storeEnergy(
     bytes32 vectorId,
     uint256 strength
   )
@@ -33,10 +33,10 @@ contract CSPotentialSystem is CSSystem {
     returns (bytes32)
   {
     address source = tx.origin;
-    bytes32 potentialId = keccak256(abi.encodePacked(block.timestamp, block.prevrandao));
 
-    erc20.approve(address(this), strength);
-    erc20.transferFrom(source, address(this), strength);
+    deposit(strength);
+
+    bytes32 potentialId = keccak256(abi.encodePacked(block.timestamp, block.prevrandao));
 
     CSVectorsTableData memory vector = CSVectorsTable.get(vectorId);
 
@@ -61,7 +61,7 @@ contract CSPotentialSystem is CSSystem {
    *
    * @notice I view this as heat release because the energy you deposited into a vector did not manifest any order based on the vector's insight, instead the vector went bust for some reason and it got archived.
    */
-  function releaseHeat(bytes32 vectorId) public payable onlyArchived(vectorId) onlyPotential(vectorId) {
+  function releaseEnergy(bytes32 vectorId) public payable onlyArchived(vectorId) onlyPotential(vectorId) {
     address source = tx.origin;
 
     CSVectorsTableData memory vector = CSVectorsTable.get(vectorId);
@@ -69,8 +69,7 @@ contract CSPotentialSystem is CSSystem {
     bytes32 potentialId = source.getPotentialId(vectorId);
     CSPotentialsTableData memory potential = CSPotentialsTable.get(potentialId);
 
-    // erc20.transfer(source, potential.strength);
-
+    withdraw(potential.strength);
     // TODO We need to remove the user from the list of potentials.
     CSVectorsTable.setCharge(vectorId, vector.charge - potential.strength);
   }

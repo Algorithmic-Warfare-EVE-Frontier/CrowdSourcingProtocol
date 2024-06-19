@@ -1,5 +1,10 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Hex } from "viem";
+import { useMUD } from "../../../MUDContext";
+
+interface Props {
+  vectorId: Hex;
+}
 
 interface IMotionForm {
   momentum: bigint;
@@ -8,9 +13,19 @@ interface IMotionForm {
   insight: string;
 }
 
-export default function MotionForm() {
+export type MotionParams = IMotionForm & Props;
+
+export default function MotionForm({ vectorId }: Props) {
   const { register, handleSubmit } = useForm<IMotionForm>();
-  const onSubmit: SubmitHandler<IMotionForm> = (data) => console.log(data);
+  const {
+    systemCalls: { initiateMotion },
+  } = useMUD();
+  const onSubmit: SubmitHandler<IMotionForm> = (data) => {
+    initiateMotion({
+      vectorId,
+      ...data,
+    });
+  };
 
   return (
     <div className="Quantum-Container font-semibold">

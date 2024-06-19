@@ -142,8 +142,36 @@ contract CSSystem is System {
    * @param motionId Identifier of the motion.
    */
   // ISSUE this somewhat causes the compilation to fail.
-  // function computeTangent(bytes32 motionId) public returns (bytes32) {
+  // function computeTangent(bytes32 motionId) public view returns (bytes32) {
   //   CSMotionsTableData memory motion = CSMotionsTable.get(motionId);
-  //   return motion.vectorId;
+  //   bytes32 vectorId = motion.vectorId;
+  //   return vectorId;
   // }
+
+  /**
+   * Transfer tokens from user to contract
+   * @param amount Amount of tokens to transfer
+   */
+  function deposit(uint256 amount) internal {
+    address source = tx.origin;
+    erc20.approve(address(this), amount);
+    erc20.transferFrom(source, address(this), amount);
+  }
+
+  /**
+   * Transfer tokens from contract to user
+   * @param amount Amount of tokens to transfer
+   */
+  function withdraw(uint256 amount) internal {
+    address source = tx.origin;
+    erc20.transfer(source, amount);
+  }
+
+  /**
+   * Transfer tokens from contract to user
+   * @param amount Amount of tokens to transfer
+   */
+  function transfer(uint256 amount, address target) internal {
+    erc20.transfer(target, amount);
+  }
 }

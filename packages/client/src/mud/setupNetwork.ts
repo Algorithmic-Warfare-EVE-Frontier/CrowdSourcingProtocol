@@ -12,7 +12,6 @@ import {
   Hex,
   parseEther,
   ClientConfig,
-  custom,
 } from "viem";
 import { createFaucetService } from "@latticexyz/services/faucet";
 import { syncToZustand } from "@latticexyz/store-sync/zustand";
