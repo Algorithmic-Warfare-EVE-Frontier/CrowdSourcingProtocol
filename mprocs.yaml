@@ -1,7 +1,10 @@
 procs:
+  anvil:
+    cwd: packages/contracts
+    shell: anvil --block-time 1 --block-base-fee-per-gas 0 --gas-limit 3000000000 --hardfork cancun
   contracts:
     cwd: packages/contracts
-    shell: pnpm run dev
+    shell: pnpm run deploy:local
   client:
     cwd: packages/client
     shell: pnpm run dev

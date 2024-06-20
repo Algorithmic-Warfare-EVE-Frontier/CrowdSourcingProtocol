@@ -8,6 +8,15 @@ export default mudConfig({
   },
   namespace: "csp",
   tables: {
+    CSSystemTokenTable: {
+      keySchema: {
+        tokenSymbol: "bytes32",
+      },
+      valueSchema: {
+        tokenAddress: "address",
+        tokenName: "string",
+      },
+    },
     // Projects
     CSVectorsTable: {
       valueSchema: {
