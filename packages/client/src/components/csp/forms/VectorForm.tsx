@@ -19,7 +19,7 @@ export default function VectorForm() {
     await initiateVector(data);
   };
 
-  const inputStyle = "bg-crude border border-brightquntum";
+  const inputStyle = "bg-crude border border-brightquantum";
 
   return (
     <div className="Quantum-Container Absolute-Center font-semibold">

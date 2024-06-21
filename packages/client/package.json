@@ -28,6 +28,7 @@
     "@latticexyz/utils": "2.0.0-next-17-awakening-9c07ab3a2",
     "@latticexyz/world": "2.0.0-next-17-awakening-9c07ab3a2",
     "@metamask/providers": "^17.0.0",
+    "@metamask/sdk-react": "^0.26.0",
     "@mui/material": "^5.15.15",
     "@typescript-eslint/eslint-plugin": "5.46.1",
     "@typescript-eslint/parser": "5.46.1",

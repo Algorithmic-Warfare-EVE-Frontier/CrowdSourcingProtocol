@@ -37,7 +37,7 @@ export default function App() {
       />
 
       <div className="bg-crude-5 -z-10 w-screen min-h-screen ">
-        <div className="flex flex-col max-w-[560px] Absolute-Center mobile:max-w-[377px] mx-auto mb-6 h-screen ">
+        <div className="max-w-[560px] mx-auto relative flex flex-col items-center justify-center">
           <Outlet />
         </div>
       </div>

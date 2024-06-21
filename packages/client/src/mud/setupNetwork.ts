@@ -45,7 +45,9 @@ import mudConfig from "contracts/mud.config";
 
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>;
 
-export async function setupNetwork() {
+export async function setupNetwork(
+  walletClient?: ReturnType<typeof createWalletClient>
+) {
   const networkConfig = await getNetworkConfig();
 
   /*
@@ -54,9 +56,7 @@ export async function setupNetwork() {
    */
   const clientOptions = {
     chain: networkConfig.chain,
-    transport:
-      // custom(window.ethereum) ||
-      transportObserver(fallback([webSocket(), http()])),
+    transport: transportObserver(fallback([webSocket(), http()])),
     pollingInterval: 1000,
   } as const satisfies ClientConfig;
 
@@ -71,14 +71,8 @@ export async function setupNetwork() {
     ...clientOptions,
     account: burnerAccount,
   });
-  // const burnerWalletClient = createWalletClient({
-  //   chain: networkConfig.chain,
-  //   transport: custom(window.ethereum!),
-  // });
 
-  // const [address] = await burnerWalletClient.getAddresses();
-  // console.log(address);
-
+  console.log(burnerWalletClient);
   /*
    * Create an observable for contract writes that we can
    * pass into MUD dev tools for transaction observability.
@@ -92,7 +86,8 @@ export async function setupNetwork() {
     address: networkConfig.worldAddress as Hex,
     abi: IWorldAbi,
     publicClient,
-    walletClient: burnerWalletClient,
+    // TODO fix this type issue.
+    walletClient: walletClient || burnerWalletClient,
     onWrite: (write) => write$.next(write),
   });
 
@@ -147,7 +142,7 @@ export async function setupNetwork() {
     tables,
     useStore,
     publicClient,
-    walletClient: burnerWalletClient,
+    walletClient: walletClient || burnerWalletClient,
     latestBlock$,
     storedBlockLogs$,
     waitForTransaction,

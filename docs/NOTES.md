@@ -70,3 +70,27 @@ Replace, `'./../shared/ui-components/*/*.{js,ts,jsx,tsx}',` with `"./node_module
 Explanation:
 
 The default path doesn't reference the components provided by `@eveworld/ui-components` correctly.
+
+
+[2024-06-20]
+
+# Integrating `EveWalletProvider` with `MudDevTools`
+
+The mud dev tools setup happen before we get to login with the EVE wallet.
+
+If we can find a way to load the account address into the the mud dev tools after we log in that is ideal.
+
+The plan is as follows,
+
+- Check if the `walletClient` interface matches from both sides.
+  - In the case of the eve wallet, it is created using `createWalletClient` from `viem`.
+  - Same in the case of the burner wallet in the `setupNetwork`.
+  - They have compatible interfaces.
+- Now, we need to find a way to switch the burner wallet for the eve or metamask wallet.
+  - We need to have a hook that allows to change the wallet after the devtools are loaded to the interface.
+  - The important part of about the wallet is that it is used to access the world contract, so we need to update that as well.
+  - Since `WalletProvider` is top most, we just need to access the context it provides, see if `walletClient` is defined and loades it to the mud context.
+    - That has been done
+  - It seems that the eve wallet doesn't trully support metamask if you read the code it just shows the button to connect.
+  - The idea is to only load the devtools when we login with the eve wallet using metamask.
+    - However the chain data are wrong since it is doesnt support localhost so I only use the walletClient I get from the logic and the network data I reuse the default ones to get the right chain, rpc etc.
