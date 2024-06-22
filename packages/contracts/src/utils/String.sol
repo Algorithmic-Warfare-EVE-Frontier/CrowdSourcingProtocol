@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-library StringBytesConversions {
-  error StringTooLongError();
-
+library StringUtils {
   function stringToBytes14(string memory self) public pure returns (bytes14) {
     bytes memory tempBytes = bytes(self);
 

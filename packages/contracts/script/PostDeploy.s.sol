@@ -12,12 +12,14 @@ import { registerERC20 } from "@latticexyz/world-modules/src/modules/erc20-puppe
 import { ERC20MetadataData } from "@latticexyz/world-modules/src/modules/erc20-puppet/tables/ERC20Metadata.sol";
 import { PuppetModule } from "@latticexyz/world-modules/src/modules/puppet/PuppetModule.sol";
 
-import { CSSystemTokenTable, CSSystemTokenTableData } from "../src/codegen/index.sol";
+import { CSSystemTokenTable, CSSystemTokenTableData } from "@storage/index.sol";
 
-import { StringBytesConversions } from "../src/utils/string.sol";
+import { BytesUtils, StringUtils } from "@utils/index.sol";
+
+import { MintPATKN } from "@scripts/MintPATKN.s.sol";
 
 contract PostDeploy is Script {
-  using StringBytesConversions for string;
+  using StringUtils for string;
 
   function run(address worldAddress) external {
     StoreSwitch.setStoreAddress(worldAddress);
@@ -77,7 +79,7 @@ contract PostDeploy is Script {
 
     // - Register the token in the table
     CSSystemTokenTable.set(
-    symbol.stringToBytes32(),
+      symbol.stringToBytes32(),
       CSSystemTokenTableData({ tokenAddress: erc20Address, tokenName: name })
     );
 
@@ -87,6 +89,10 @@ contract PostDeploy is Script {
     vm.writeJson(finalJson, "./tokens.json");
 
     vm.stopBroadcast();
+
+    // - Mint to all default users
+    MintPATKN mintScript = new MintPATKN();
+    mintScript.run(worldAddress);
 
     // END ----------- Deploying an ERC20 Token
   }

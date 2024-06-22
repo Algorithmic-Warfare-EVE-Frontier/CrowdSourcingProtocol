@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { CSSystem } from "./CSSystem.sol";
-import { CSVectorsTable, CSVectorsTableData, CSMotionsTable, CSMotionsTableData, CSVectorMotionsLookupTable } from "../codegen/index.sol";
-import { MotionStatus } from "../codegen/common.sol";
+import { CSSystem } from "@systems/core/CSSystem.sol";
+import { CSVectorsTable, CSVectorsTableData, CSMotionsTable, CSMotionsTableData, CSVectorMotionsLookupTable } from "@storage/index.sol";
+import { MotionStatus } from "@storage/common.sol";
 
 /**
  * @title Crowd Sourcing Protocol - Motion System
@@ -55,7 +55,7 @@ contract CSMotionSystem is CSSystem {
     CSMotionsTableData memory motion = CSMotionsTable.get(motionId);
     CSVectorsTableData memory vector = CSVectorsTable.get(motion.vectorId);
 
-    transfer(motion.momentum, motion.target);
+    // transfer(motion.momentum, motion.target);
     CSVectorsTable.setCharge(motion.vectorId, vector.charge - motion.momentum);
   }
 

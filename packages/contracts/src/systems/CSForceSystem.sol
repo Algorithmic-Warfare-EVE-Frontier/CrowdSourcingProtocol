@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { CSSystem } from "./CSSystem.sol";
+import { CSSystem } from "@systems/core/CSSystem.sol";
 import { CSVectorsTable, CSVectorsTableData, CSForcesTable, CSForcesTableData, CSMotionsTable, CSMotionsTableData, CSMotionForcesLookupTable, CSVectorPotentialsLookupTable, CSPotentialsTable, CSPotentialsTableData } from "../codegen/index.sol";
-import { MotionStatus, ForceDirection } from "../codegen/common.sol";
-import { CSAddressUtils } from "./shared.sol";
+import { MotionStatus, ForceDirection } from "@storage/common.sol";
+import { AddressUtils } from "@utils/index.sol";
 
 /**
  * @title Crowd Sourcing Protocol - Force System
@@ -12,7 +12,7 @@ import { CSAddressUtils } from "./shared.sol";
  * @notice This system defines the main API of force handling.
  */
 contract CSForceSystem is CSSystem {
-  using CSAddressUtils for address;
+  using AddressUtils for address;
 
   /**
    * Apply force on an issued motion.

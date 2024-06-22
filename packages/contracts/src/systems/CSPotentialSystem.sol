@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { CSSystem } from "./CSSystem.sol";
+import { CSSystem } from "@systems/core/CSSystem.sol";
 import { CSVectorsTable, CSVectorsTableData, CSPotentialsTable, CSPotentialsTableData, CSVectorPotentialsLookupTable, CSVectorPotentialsLookupTable } from "../codegen/index.sol";
 import { VectorStatus } from "../codegen/common.sol";
-import { CSAddressUtils } from "./shared.sol";
+import { AddressUtils } from "@utils/index.sol";
 
 /**
  * @title Crowd Sourcing Protocol - Potential System
@@ -12,7 +12,7 @@ import { CSAddressUtils } from "./shared.sol";
  * @notice This system defines the main API of potential handling.
  */
 contract CSPotentialSystem is CSSystem {
-  using CSAddressUtils for address;
+  using AddressUtils for address;
 
   /**
    * Create a "delta" contribution.
@@ -34,7 +34,7 @@ contract CSPotentialSystem is CSSystem {
   {
     address source = tx.origin;
 
-    deposit(strength);
+    // deposit(strength);
 
     bytes32 potentialId = keccak256(abi.encodePacked(block.timestamp, block.prevrandao));
 
@@ -69,7 +69,7 @@ contract CSPotentialSystem is CSSystem {
     bytes32 potentialId = source.getPotentialId(vectorId);
     CSPotentialsTableData memory potential = CSPotentialsTable.get(potentialId);
 
-    withdraw(potential.strength);
+    // withdraw(potential.strength);
     // TODO We need to remove the user from the list of potentials.
     CSVectorsTable.setCharge(vectorId, vector.charge - potential.strength);
   }

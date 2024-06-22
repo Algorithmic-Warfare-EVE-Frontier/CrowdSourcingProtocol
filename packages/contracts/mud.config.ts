@@ -8,6 +8,14 @@ export default mudConfig({
   },
   namespace: "csp",
   tables: {
+    CSSystemInfiniteApproveTable: {
+      keySchema: {
+        userAddress: "address",
+      },
+      valueSchema: {
+        approved: "bool",
+      },
+    },
     CSSystemTokenTable: {
       keySchema: {
         tokenSymbol: "bytes32",

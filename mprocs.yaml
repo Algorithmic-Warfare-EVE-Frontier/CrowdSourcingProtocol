@@ -4,7 +4,10 @@ procs:
     shell: anvil --block-time 1 --block-base-fee-per-gas 0 --gas-limit 3000000000 --hardfork cancun
   contracts:
     cwd: packages/contracts
-    shell: pnpm run deploy:local
+    shell: pnpm run dev --rpc http://127.0.0.1:8545 --alwaysRunPostDeploy
+  contracts-test:
+    cwd: packages/contracts
+    shell: pnpm run test
   client:
     cwd: packages/client
     shell: pnpm run dev

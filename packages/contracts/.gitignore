@@ -8,3 +8,8 @@ logs/
 
 # Ignore MUD deploy artifacts
 deploys/**/*.json
+
+# artifacts
+.env
+tokens.json
+worlds.json

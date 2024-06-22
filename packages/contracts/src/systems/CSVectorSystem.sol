@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { CSSystem } from "./CSSystem.sol";
-import { CSVectorsTable, CSVectorsTableData } from "../codegen/index.sol";
-import { VectorStatus } from "../codegen/common.sol";
+import { CSSystem } from "@systems/core/CSSystem.sol";
+import { CSVectorsTable, CSVectorsTableData } from "@storage/index.sol";
+import { VectorStatus } from "@storage/common.sol";
 
 /**
  * @title Crowd Sourcing Protocol - Vector System

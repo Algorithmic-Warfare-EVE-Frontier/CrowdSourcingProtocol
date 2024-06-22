@@ -4,21 +4,22 @@ pragma solidity >=0.8.24;
 import { System } from "@latticexyz/world/src/System.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 
-import { CSVectorsTable, CSVectorsTableData, CSVectorPotentialsLookupTable, CSVectorPotentialsLookupTable, CSForcesTable, CSForcesTableData, CSMotionsTable, CSMotionsTableData, CSMotionForcesLookupTable, CSMotionForcesLookupTable, CSVectorPotentialsLookupTable, CSPotentialsTable, CSPotentialsTableData, CSSystemTokenTable, CSSystemTokenTableData } from "../codegen/index.sol";
+import { CSVectorsTable, CSVectorsTableData, CSVectorPotentialsLookupTable, CSVectorPotentialsLookupTable, CSForcesTable, CSForcesTableData, CSMotionsTable, CSMotionsTableData, CSMotionForcesLookupTable, CSMotionForcesLookupTable, CSVectorPotentialsLookupTable, CSPotentialsTable, CSPotentialsTableData, CSSystemTokenTable, CSSystemTokenTableData } from "@storage/index.sol";
 
-import { VectorStatus, MotionStatus } from "../codegen/common.sol";
+import { VectorStatus, MotionStatus } from "@storage/common.sol";
 
-import { TokenSymbolUtils } from "../utils/bytes.sol";
-import { StringBytesConversions } from "../utils/string.sol";
+import { BytesUtils, StringUtils } from "@utils/index.sol";
+
+import { CSBase } from "@systems/core/CSBase.sol";
 
 /**
- * @title Crowd Sourcing Protocol Base System
+ * @title Crowd Sourcing Protocol System
  * @author Abderraouf "k-symplex" Belalia<abderraoufbelalia@symplectic.link>
  * @notice This defines the base helper functions and modifiers for the high-level systems.
  */
-contract CSSystem is System {
-  using TokenSymbolUtils for bytes32;
-  using StringBytesConversions for string;
+contract CSSystem is CSBase {
+  using BytesUtils for bytes32;
+  using StringUtils for string;
   /**
    * This makes sure that only the handler of the vector performs an action.
    */
@@ -134,49 +135,5 @@ contract CSSystem is System {
     CSMotionsTableData memory motion = CSMotionsTable.get(motionId);
     require(motion.status == MotionStatus.PROCEEDING, "Requires motion to be proceeding.");
     _;
-  }
-
-  /**
-   * This extracts the vectorId associated to a provided motion.
-   * @param motionId Identifier of the motion.
-   */
-  // ISSUE this somewhat causes the compilation to fail.
-  // function computeTangent(bytes32 motionId) public view returns (bytes32) {
-  //   CSMotionsTableData memory motion = CSMotionsTable.get(motionId);
-  //   bytes32 vectorId = motion.vectorId;
-  //   return vectorId;
-  // }
-
-  /**
-   * Transfer tokens from user to contract
-   * @param amount Amount of tokens to transfer
-   */
-  function deposit(uint256 amount) internal {
-    // string memory tokenSymbol = "PATKN";
-    // IERC20Mintable erc20 = tokenSymbol.stringToBytes32().getToken();
-    // address source = tx.origin;
-    // erc20.approve(address(this), amount);
-    // erc20.transferFrom(source, address(this), amount);
-  }
-
-  /**
-   * Transfer tokens from contract to user
-   * @param amount Amount of tokens to transfer
-   */
-  function withdraw(uint256 amount) internal {
-    // string memory tokenSymbol = "PATKN";
-    // IERC20Mintable erc20 = tokenSymbol.stringToBytes32().getToken();
-    // address source = tx.origin;
-    // erc20.transfer(source, amount);
-  }
-
-  /**
-   * Transfer tokens from contract to user
-   * @param amount Amount of tokens to transfer
-   */
-  function transfer(uint256 amount, address target) internal {
-    // string memory tokenSymbol = "PATKN";
-    // IERC20Mintable erc20 = tokenSymbol.stringToBytes32().getToken();
-    // erc20.transfer(target, amount);
   }
 }
