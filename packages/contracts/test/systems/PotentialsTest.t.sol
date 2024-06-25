@@ -3,32 +3,47 @@ pragma solidity >=0.8.24;
 
 import "forge-std/Test.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
+import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 
 import { IWorld } from "../../src/codegen/world/IWorld.sol";
 import { CSVectorsTable, CSVectorsTableData, CSPotentialsTable, CSPotentialsTableData, CSVectorPotentialsLookupTable } from "../../src/codegen/index.sol";
 import { VectorStatus } from "../../src/codegen/common.sol";
 import { TestWithSetup } from "../SystemTestSetups.sol";
 
-contract MotionsTest is TestWithSetup {
+import { BytesUtils, StringUtils } from "@utils/index.sol";
+import { TOKEN_SYMBOL } from "@constants/globals.sol";
+
+contract PotentialTest is TestWithSetup {
   function testStoreEnergy() public {
-    // address user1Address = vm.envAddress("PUBLIC_KEY_1");
-    // vm.startPrank(user1Address);
-    // // -------------------------------------
-    // // Given
-    // bytes32 vectorId = prepareVectorInitiatedBy(user1Address, 300000);
-    // // When
-    // bytes32 potentialId = IWorld(worldAddress).csp__storeEnergy(vectorId, 10000);
-    // CSVectorsTableData memory vector = CSVectorsTable.get(vectorId);
-    // CSPotentialsTableData memory potential = CSPotentialsTable.get(potentialId);
-    // bytes32[] memory potentialIds = CSVectorPotentialsLookupTable.get(vectorId);
-    // // Then
-    // assertEq(potential.source, user1Address);
-    // assertEq(potential.strength, 10000);
-    // assertEq(vector.charge, 10000);
-    // assertEq(potential.vectorId, vectorId);
-    // assertEq(potentialIds[0], potentialId);
-    // // -------------------------------------
-    // vm.stopPrank();
+    // -------------------------------------
+    // Given
+    bytes32 vectorId = prepareVectorInitiatedBy(user1PrivateKey, 300000 * 1 ether, 5 days, "This is a test");
+
+    vm.startBroadcast(user2PrivateKey);
+    // When
+    address contractAddress = IWorld(worldAddress).csp__grantApproval(1);
+    vm.stopBroadcast();
+
+    // Debug
+    IERC20Mintable erc20 = BytesUtils.getToken(TOKEN_SYMBOL);
+    uint balance = erc20.balanceOf(user2Address);
+    console.log(user2Address, balance);
+    uint allowance = erc20.allowance(user2Address, contractAddress);
+    console.log(contractAddress, allowance);
+
+    bytes32 potentialId = IWorld(worldAddress).csp__storeEnergy(vectorId, 1);
+
+    CSVectorsTableData memory vector = CSVectorsTable.get(vectorId);
+    CSPotentialsTableData memory potential = CSPotentialsTable.get(potentialId);
+    bytes32[] memory potentialIds = CSVectorPotentialsLookupTable.get(vectorId);
+
+    // Then
+    assertEq(potential.source, user2Address);
+    assertEq(potential.strength, 10000);
+    assertEq(vector.charge, 10000);
+    assertEq(potential.vectorId, vectorId);
+    assertEq(potentialIds[0], potentialId);
+    // -------------------------------------
   }
 
   function testReleaseEnergy() public {

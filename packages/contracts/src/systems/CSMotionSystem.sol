@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
+import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 
 import { CSSystem } from "@systems/core/CSSystem.sol";
 import { CSVectorsTable, CSVectorsTableData, CSMotionsTable, CSMotionsTableData, CSVectorMotionsLookupTable } from "@storage/index.sol";
 import { MotionStatus } from "@storage/common.sol";
+
+import { BytesUtils, StringUtils } from "@utils/index.sol";
+import { TOKEN_SYMBOL } from "@constants/globals.sol";
 
 /**
  * @title Crowd Sourcing Protocol - Motion System
@@ -55,7 +59,9 @@ contract CSMotionSystem is CSSystem {
     CSMotionsTableData memory motion = CSMotionsTable.get(motionId);
     CSVectorsTableData memory vector = CSVectorsTable.get(motion.vectorId);
 
-    // transfer(motion.momentum, motion.target);
+    IERC20Mintable erc20 = BytesUtils.getToken(TOKEN_SYMBOL);
+    erc20.transfer(motion.target, motion.momentum);
+
     CSVectorsTable.setCharge(motion.vectorId, vector.charge - motion.momentum);
   }
 

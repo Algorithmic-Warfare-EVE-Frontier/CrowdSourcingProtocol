@@ -17,52 +17,48 @@ import { TOKEN_SYMBOL } from "@constants/globals.sol";
  * @notice This defines the base helper functions and modifiers for the high-level systems.
  */
 contract CSBase is System {
-  using BytesUtils for bytes32;
-  using StringUtils for string;
-
-  /**
-   * This extracts the vectorId associated to a provided motion.
-   * @param motionId Identifier of the motion.
-   */
-  // ISSUE this somewhat causes the compilation to fail.
+  // /**
+  //  * This extracts the vectorId associated to a provided motion.
+  //  * @param motionId Identifier of the motion
+  //  * @notice This makes the the com
+  //  */
   // function computeTangent(bytes32 motionId) public view returns (bytes32) {
   //   CSMotionsTableData memory motion = CSMotionsTable.get(motionId);
   //   bytes32 vectorId = motion.vectorId;
   //   return vectorId;
   // }
-
+  /**
+   * Grant an allowance from a user to this contract
+   * @param amount Amount of money to allow this contract to spend
+   */
+  // function approve(uint amount) public {
+  //   IERC20Mintable erc20 = BytesUtils.getToken(TOKEN_SYMBOL);
+  //   erc20.approve(address(this), amount);
+  // }
   /**
    * Transfer tokens from user to contract
    * @param amount Amount of tokens to transfer
    */
-  function deposit(uint256 amount) internal {
-    address source = tx.origin;
-    IERC20Mintable erc20 = TOKEN_SYMBOL.stringToBytes32().getToken();
-    bool approved = CSSystemInfiniteApproveTable.getApproved(source);
-
-    if (!approved) {
-      uint infiniteAmount = type(uint).max;
-      erc20.approve(address(this), infiniteAmount);
-    }
-    erc20.transferFrom(source, address(this), amount);
-  }
-
+  // function deposit(uint256 amount) public {
+  //   address source = tx.origin;
+  //   IERC20Mintable erc20 = BytesUtils.getToken(TOKEN_SYMBOL);
+  //   erc20.transferFrom(source, address(this), amount);
+  // }
   /**
    * Transfer tokens from contract to user
    * @param amount Amount of tokens to transfer
    */
-  function withdraw(uint256 amount) internal {
-    IERC20Mintable erc20 = TOKEN_SYMBOL.stringToBytes32().getToken();
-    address source = tx.origin;
-    erc20.transfer(source, amount);
-  }
-
+  // function withdraw(uint256 amount) public {
+  //   IERC20Mintable erc20 = BytesUtils.getToken(TOKEN_SYMBOL);
+  //   address source = tx.origin;
+  //   erc20.transfer(source, amount);
+  // }
   /**
    * Transfer tokens from contract to user
    * @param amount Amount of tokens to transfer
    */
-  function transfer(uint256 amount, address target) internal {
-    IERC20Mintable erc20 = TOKEN_SYMBOL.stringToBytes32().getToken();
-    erc20.transfer(target, amount);
-  }
+  // function transfer(uint256 amount, address target) public {
+  //   IERC20Mintable erc20 = BytesUtils.getToken(TOKEN_SYMBOL);
+  //   erc20.transfer(target, amount);
+  // }
 }

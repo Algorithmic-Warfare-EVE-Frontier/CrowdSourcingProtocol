@@ -7,10 +7,10 @@ import { CSSystemTokenTable, CSSystemTokenTableData } from "@storage/index.sol";
 library BytesUtils {
   /**
    * Recover token based on its symbol
-   * @param self Symbol associated to the token
+   * @param symbol Symbol associated to the token
    */
-  function getToken(bytes32 self) internal view returns (IERC20Mintable) {
-    address tokenAddress = CSSystemTokenTable.getTokenAddress(self);
+  function getToken(bytes32 symbol) internal view returns (IERC20Mintable) {
+    address tokenAddress = CSSystemTokenTable.getTokenAddress(symbol);
     if (tokenAddress != 0x0000000000000000000000000000000000000000) {
       IERC20Mintable erc20 = IERC20Mintable(tokenAddress);
       return erc20;

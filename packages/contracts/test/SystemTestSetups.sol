@@ -9,7 +9,20 @@ import { CSVectorsTable, CSVectorsTableData, CSPotentialsTable, CSPotentialsTabl
 import { VectorStatus, MotionStatus, ForceDirection } from "@storage/common.sol";
 
 contract TestWithSetup is MudTest {
+  // Private Keys
+  uint256 user0PrivateKey = vm.envUint("PRIVATE_KEY");
+  uint256 user1PrivateKey = vm.envUint("PRIVATE_KEY_1");
+  uint256 user2PrivateKey = vm.envUint("PRIVATE_KEY_2");
+  uint256 user3PrivateKey = vm.envUint("PRIVATE_KEY_3");
+  uint256 user4PrivateKey = vm.envUint("PRIVATE_KEY_4");
+  uint256 user5PrivateKey = vm.envUint("PRIVATE_KEY_5");
+  uint256 user6PrivateKey = vm.envUint("PRIVATE_KEY_6");
+  uint256 user7PrivateKey = vm.envUint("PRIVATE_KEY_7");
+  uint256 user8PrivateKey = vm.envUint("PRIVATE_KEY_8");
+  uint256 userrPrivateKey = vm.envUint("PRIVATE_KEY_9");
+
   // Addresses
+  address user0Address = vm.envAddress("PUBLIC_KEY");
   address user1Address = vm.envAddress("PUBLIC_KEY_1");
   address user2Address = vm.envAddress("PUBLIC_KEY_2");
   address user3Address = vm.envAddress("PUBLIC_KEY_3");
@@ -22,22 +35,28 @@ contract TestWithSetup is MudTest {
 
   /**
    * Prepares a blank vector for usage.
-   * @param user User that initiates a blank vector.
+   * @param userPrivateKey User that initiates a blank vector.
    * @param withCapacity Capacity of the vector.
+   * @param withDuration Duration of the vector's active.
+   * @param basedOnInsight The information on which the vector's idea rests on.
    */
-  function prepareVectorInitiatedBy(address user, uint withCapacity) public returns (bytes32) {
-    vm.startPrank(user);
+  function prepareVectorInitiatedBy(
+    uint userPrivateKey,
+    uint withCapacity,
+    uint withDuration,
+    string memory basedOnInsight
+  ) public returns (bytes32) {
+    vm.startBroadcast(userPrivateKey);
     // -------------------------------------
 
     uint256 capacity = withCapacity;
-
-    uint256 lifetime = block.timestamp + 5 days;
-    string memory insight = "Trust me, it will work.";
+    uint256 lifetime = block.timestamp + withDuration;
+    string memory insight = basedOnInsight;
 
     bytes32 vectorId = IWorld(worldAddress).csp__initiateVector(capacity, lifetime, insight);
 
     // -------------------------------------
-    vm.stopPrank();
+    vm.stopBroadcast();
 
     return vectorId;
   }
@@ -59,12 +78,14 @@ contract TestWithSetup is MudTest {
   }
 
   function prepareDischargingVector(
-    address user,
+    uint userPrivateKey,
     uint capacity,
+    uint duration,
+    string memory insight,
     address[] memory potentials,
     uint[] memory energies
   ) public returns (bytes32) {
-    bytes32 vectorId = prepareVectorInitiatedBy(user, capacity);
+    bytes32 vectorId = prepareVectorInitiatedBy(userPrivateKey, capacity, duration, insight);
 
     require(potentials.length == energies.length, "The list of potentials and energies must be equal in size.");
 
