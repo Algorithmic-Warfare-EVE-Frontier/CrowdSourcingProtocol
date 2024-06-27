@@ -17,39 +17,16 @@ import { CSSystemTokenTable, CSSystemTokenTableData } from "@storage/index.sol";
 import { BytesUtils, StringUtils } from "@utils/index.sol";
 
 import { MintPATKN } from "@scripts/MintPATKN.s.sol";
+import { DemoSetup } from "@scripts/DemoSetup.s.sol";
 
-contract PostDeploy is Script {
+import { ScriptWithSetup } from "@utils/Setup.sol";
+
+contract PostDeploy is ScriptWithSetup {
   using StringUtils for string;
 
   function run(address worldAddress) external {
     StoreSwitch.setStoreAddress(worldAddress);
     IBaseWorld world = IBaseWorld(worldAddress);
-
-    // BEGIN ----------- Loading Env Vars
-
-    // - Private Keys
-    uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-    // uint256 user1PrivateKey = vm.envUint("PRIVATE_KEY_1");
-    // uint256 user2PrivateKey = vm.envUint("PRIVATE_KEY_2");
-    // uint256 user3PrivateKey = vm.envUint("PRIVATE_KEY_3");
-    // uint256 user4PrivateKey = vm.envUint("PRIVATE_KEY_4");
-    // uint256 user5PrivateKey = vm.envUint("PRIVATE_KEY_5");
-    // uint256 user6PrivateKey = vm.envUint("PRIVATE_KEY_6");
-    // uint256 user7PrivateKey = vm.envUint("PRIVATE_KEY_7");
-    // uint256 user8PrivateKey = vm.envUint("PRIVATE_KEY_8");
-    // uint256 userrPrivateKey = vm.envUint("PRIVATE_KEY_9");
-
-    // - Addresses
-    // address deployerAddress = vm.envAddress("PUBLIC_KEY");
-    // address user1Address = vm.envAddress("PUBLIC_KEY_1");
-    // address user2Address = vm.envAddress("PUBLIC_KEY_2");
-    // address user3Address = vm.envAddress("PUBLIC_KEY_3");
-    // address user4Address = vm.envAddress("PUBLIC_KEY_4");
-    // address user5Address = vm.envAddress("PUBLIC_KEY_5");
-    // address user6Address = vm.envAddress("PUBLIC_KEY_6");
-    // address user7Address = vm.envAddress("PUBLIC_KEY_7");
-    // address user8Address = vm.envAddress("PUBLIC_KEY_8");
-    // address user9Address = vm.envAddress("PUBLIC_KEY_9");
 
     // - Token Info
     bytes14 namespace = (vm.envString("TOKEN_NAMESPACE")).stringToBytes14();
@@ -60,7 +37,7 @@ contract PostDeploy is Script {
     // END ----------- Loading Env Vars
 
     // BEGIN ----------- Deploying an ERC20 Token
-    vm.startBroadcast(deployerPrivateKey);
+    vm.startBroadcast(user0PrivateKey);
 
     // - Installing the puppet module, necessary.
     StoreSwitch.setStoreAddress(address(world));
@@ -93,6 +70,10 @@ contract PostDeploy is Script {
     // - Mint to all default users
     MintPATKN mintScript = new MintPATKN();
     mintScript.run(worldAddress);
+
+    // - Perform setup
+    // DemoSetup setupScript = new DemoSetup();
+    // setupScript.run(worldAddress);
 
     // END ----------- Deploying an ERC20 Token
   }

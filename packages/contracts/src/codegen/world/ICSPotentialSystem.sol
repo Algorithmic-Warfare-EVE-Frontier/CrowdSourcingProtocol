@@ -15,4 +15,6 @@ interface ICSPotentialSystem {
   function csp__storeEnergy(bytes32 vectorId, uint256 strength) external payable returns (bytes32);
 
   function csp__releaseEnergy(bytes32 vectorId) external payable;
+
+  function csp__getContractAddress() external view returns (address);
 }

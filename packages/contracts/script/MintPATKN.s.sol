@@ -15,39 +15,25 @@ import { PuppetModule } from "@latticexyz/world-modules/src/modules/puppet/Puppe
 import { CSVectorsTable, CSVectorsTableData, CSVectorPotentialsLookupTable, CSVectorPotentialsLookupTable, CSForcesTable, CSForcesTableData, CSMotionsTable, CSMotionsTableData, CSMotionForcesLookupTable, CSMotionForcesLookupTable, CSVectorPotentialsLookupTable, CSPotentialsTable, CSPotentialsTableData, CSSystemTokenTable, CSSystemTokenTableData } from "@storage/index.sol";
 import { VectorStatus, MotionStatus, ForceDirection } from "@storage/common.sol";
 
+import { ScriptWithSetup } from "@utils/Setup.sol";
 import { BytesUtils, StringUtils } from "@utils/index.sol";
 
-contract MintPATKN is Script {
+import { TOKEN_SYMBOL } from "@constants/globals.sol";
+
+contract MintPATKN is ScriptWithSetup {
   using BytesUtils for bytes32;
   using StringUtils for string;
 
   function run(address worldAddress) external {
     StoreSwitch.setStoreAddress(worldAddress);
 
-    // BEGIN ----------- Loading Env Vars
-    // Private Keys
-    uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-
-    // Addresses
-    address user1Address = vm.envAddress("PUBLIC_KEY_1");
-    address user2Address = vm.envAddress("PUBLIC_KEY_2");
-    address user3Address = vm.envAddress("PUBLIC_KEY_3");
-    address user4Address = vm.envAddress("PUBLIC_KEY_4");
-    address user5Address = vm.envAddress("PUBLIC_KEY_5");
-    address user6Address = vm.envAddress("PUBLIC_KEY_6");
-    address user7Address = vm.envAddress("PUBLIC_KEY_7");
-    address user8Address = vm.envAddress("PUBLIC_KEY_8");
-    address user9Address = vm.envAddress("PUBLIC_KEY_9");
-    // END ----------- Loading Env Vars
-
     // BEGIN ----------- Minting PATKN ERC20 Token to all anvil default accounts
     uint256 amount = 10000000000;
 
-    vm.startBroadcast(deployerPrivateKey);
+    vm.startBroadcast(user0PrivateKey);
 
     // Minting an amount of token to all default anvil wallets
-    string memory tokenSymbol = "PATKN";
-    IERC20Mintable erc20 = tokenSymbol.stringToBytes32().getToken();
+    IERC20Mintable erc20 = TOKEN_SYMBOL.getToken();
 
     erc20.mint(user1Address, amount * 1 ether);
     console.log("minting to: ", address(user1Address));

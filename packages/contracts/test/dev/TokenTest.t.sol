@@ -11,7 +11,7 @@ import { BytesUtils, StringUtils } from "@utils/index.sol";
 
 import { TOKEN_SYMBOL } from "@constants/globals.sol";
 
-import { TestWithSetup } from "@tests/SystemTestSetups.sol";
+import { TestWithSetup } from "@utils/Setup.sol";
 
 // This has been used in development to check the token work.
 

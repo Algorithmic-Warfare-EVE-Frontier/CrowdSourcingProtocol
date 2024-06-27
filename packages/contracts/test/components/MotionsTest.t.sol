@@ -7,7 +7,7 @@ import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { IWorld } from "../../src/codegen/world/IWorld.sol";
 import { CSVectorsTable, CSVectorsTableData, CSPotentialsTable, CSPotentialsTableData, CSVectorPotentialsLookupTable, CSMotionsTable, CSMotionsTableData } from "../../src/codegen/index.sol";
 import { VectorStatus, MotionStatus, ForceDirection } from "../../src/codegen/common.sol";
-import { TestWithSetup } from "../SystemTestSetups.sol";
+import { TestWithSetup } from "@utils/Setup.sol";
 
 contract MotionsTest is TestWithSetup {
   function testMotionInitiated() public {

@@ -8,21 +8,26 @@ import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-pupp
 import { IWorld } from "../../src/codegen/world/IWorld.sol";
 import { CSVectorsTable, CSVectorsTableData, CSPotentialsTable, CSPotentialsTableData, CSVectorPotentialsLookupTable } from "../../src/codegen/index.sol";
 import { VectorStatus } from "../../src/codegen/common.sol";
-import { TestWithSetup } from "../SystemTestSetups.sol";
+import { TestWithSetup } from "@utils/Setup.sol";
 
 import { BytesUtils, StringUtils } from "@utils/index.sol";
 import { TOKEN_SYMBOL } from "@constants/globals.sol";
 
 contract PotentialTest is TestWithSetup {
+  /**
+   * Case: User stores "energy" token (symbol: PATKN) in the contract.
+   */
   function testStoreEnergy() public {
     // -------------------------------------
+
     // Given
     bytes32 vectorId = prepareVectorInitiatedBy(user1PrivateKey, 300000 * 1 ether, 5 days, "This is a test");
 
-    vm.startBroadcast(user2PrivateKey);
     // When
-    address contractAddress = IWorld(worldAddress).csp__grantApproval(1);
-    vm.stopBroadcast();
+    // - User 2 approves the transfer.
+    vm.startPrank(user2Address);
+    address contractAddress = IWorld(worldAddress).csp__grantApproval(200);
+    vm.stopPrank();
 
     // Debug
     IERC20Mintable erc20 = BytesUtils.getToken(TOKEN_SYMBOL);
@@ -31,7 +36,10 @@ contract PotentialTest is TestWithSetup {
     uint allowance = erc20.allowance(user2Address, contractAddress);
     console.log(contractAddress, allowance);
 
-    bytes32 potentialId = IWorld(worldAddress).csp__storeEnergy(vectorId, 1);
+    // - User 2 asks the contract to transfer itself the approved amount.
+    vm.startPrank(user2Address);
+    bytes32 potentialId = IWorld(worldAddress).csp__storeEnergy(vectorId, 200);
+    vm.stopPrank();
 
     CSVectorsTableData memory vector = CSVectorsTable.get(vectorId);
     CSPotentialsTableData memory potential = CSPotentialsTable.get(potentialId);

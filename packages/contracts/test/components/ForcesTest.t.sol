@@ -7,7 +7,7 @@ import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { IWorld } from "@interface/IWorld.sol";
 import { CSVectorsTable, CSVectorsTableData, CSPotentialsTable, CSPotentialsTableData, CSVectorPotentialsLookupTable, CSMotionsTable, CSMotionsTableData, CSForcesTable, CSForcesTableData } from "@storage/index.sol";
 import { VectorStatus, MotionStatus, ForceDirection } from "@storage/common.sol";
-import { TestWithSetup } from "@tests/SystemTestSetups.sol";
+import { TestWithSetup } from "@utils/Setup.sol";
 
 contract MotionsTest is TestWithSetup {
   function testApplyForce() public {
