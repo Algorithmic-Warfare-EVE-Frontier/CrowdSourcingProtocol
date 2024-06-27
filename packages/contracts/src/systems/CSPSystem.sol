@@ -143,22 +143,22 @@ contract CSPSystem is System {
     _;
   }
 
-  /**
-   * Toggle on/off infinite approve.
-   */
-  function toggleInfiniteApprove() public returns (address) {
-    address source = _msgSender();
-    uint infiniteAmount = type(uint).max;
-    uint zeroAmount = type(uint).min;
-    bool approved = CSSystemInfiniteApproveTable.getApproved(source);
-    if (approved) {
-      CSSystemInfiniteApproveTable.setApproved(source, false);
-      return grantApproval(zeroAmount);
-    } else {
-      CSSystemInfiniteApproveTable.setApproved(source, true);
-      return grantApproval(infiniteAmount);
-    }
-  }
+  // /**
+  //  * Toggle on/off infinite approve.
+  //  */
+  // function toggleInfiniteApprove() public returns (address) {
+  //   address source = _msgSender();
+  //   uint infiniteAmount = type(uint).max;
+  //   uint zeroAmount = type(uint).min;
+  //   bool approved = CSSystemInfiniteApproveTable.getApproved(source);
+  //   if (approved) {
+  //     CSSystemInfiniteApproveTable.setApproved(source, false);
+  //     return grantApproval(zeroAmount);
+  //   } else {
+  //     CSSystemInfiniteApproveTable.setApproved(source, true);
+  //     return grantApproval(infiniteAmount);
+  //   }
+  // }
 
   /**
    * Grant an allowance from a user to this contract

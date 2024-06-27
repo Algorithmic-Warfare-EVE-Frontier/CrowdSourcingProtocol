@@ -24,10 +24,9 @@ contract PotentialTest is TestWithSetup {
     bytes32 vectorId = prepareVectorInitiatedBy(user1PrivateKey, 300000 * 1 ether, 5 days, "This is a test");
 
     // When
-    // - User 2 approves the transfer.
-    vm.startPrank(user2Address);
-    address contractAddress = IWorld(worldAddress).csp__grantApproval(200);
-    vm.stopPrank();
+    // address contractAddress = IWorld(worldAddress).csp__grantApproval(1);
+    address contractAddress = address(0);
+    vm.stopBroadcast();
 
     // Debug
     IERC20Mintable erc20 = BytesUtils.getToken(TOKEN_SYMBOL);

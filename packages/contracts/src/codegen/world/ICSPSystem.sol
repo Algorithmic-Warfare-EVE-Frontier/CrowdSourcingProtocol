@@ -10,8 +10,6 @@ import { ForceDirection } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface ICSPSystem {
-  function csp__toggleInfiniteApprove() external returns (address);
-
   function csp__grantApproval(uint amount) external returns (address);
 
   function csp__initiateVector(uint256 capacity, uint256 lifetime, string memory insight) external returns (bytes32);
@@ -32,9 +30,9 @@ interface ICSPSystem {
 
   function csp__cancelMotion(bytes32 motionId) external;
 
-  function csp__storeEnergy(bytes32 vectorId, uint256 strength) external payable returns (address);
+  function csp__storeEnergy(bytes32 vectorId, uint256 strength) external returns (bytes32);
 
-  function csp__releaseEnergy(bytes32 vectorId) external payable;
+  function csp__releaseEnergy(bytes32 vectorId) external;
 
   function csp__applyForce(
     bytes32 motionId,
