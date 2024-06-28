@@ -10,6 +10,8 @@ import { ForceDirection } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface ICSPSystem {
+  function csp__registerContractAddress() external returns (address);
+
   function csp__grantApproval(uint amount) external returns (address);
 
   function csp__initiateVector(uint256 capacity, uint256 lifetime, string memory insight) external returns (bytes32);

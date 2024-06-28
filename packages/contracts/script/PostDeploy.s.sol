@@ -5,6 +5,7 @@ import { Script } from "forge-std/Script.sol";
 import { console } from "forge-std/console.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { IBaseWorld } from "@latticexyz/world/src/codegen/interfaces/IBaseWorld.sol";
+import { IWorld } from "@interface/IWorld.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 import { ERC20Module } from "@latticexyz/world-modules/src/modules/erc20-puppet/ERC20Module.sol";
 import { registerERC20 } from "@latticexyz/world-modules/src/modules/erc20-puppet/registerERC20.sol";
@@ -12,7 +13,7 @@ import { registerERC20 } from "@latticexyz/world-modules/src/modules/erc20-puppe
 import { ERC20MetadataData } from "@latticexyz/world-modules/src/modules/erc20-puppet/tables/ERC20Metadata.sol";
 import { PuppetModule } from "@latticexyz/world-modules/src/modules/puppet/PuppetModule.sol";
 
-import { CSSystemTokenTable, CSSystemTokenTableData } from "@storage/index.sol";
+import { CSSystemTokenTable, CSSystemTokenTableData, CSPContractAddress } from "@storage/index.sol";
 
 import { BytesUtils, StringUtils } from "@utils/index.sol";
 
@@ -67,9 +68,23 @@ contract PostDeploy is ScriptWithSetup {
 
     vm.stopBroadcast();
 
+    // - Register the contract address
+    address contractAddress = IWorld(worldAddress).csp__registerContractAddress();
+
     // - Mint to all default users
     MintPATKN mintScript = new MintPATKN();
     mintScript.run(worldAddress);
+
+    // - Approve the contract
+
+    vm.startPrank(user2Address);
+    erc20Token.approve(contractAddress, 10000);
+    vm.stopPrank();
+
+    uint balance = erc20Token.balanceOf(user2Address);
+    console.log(user2Address, balance);
+    uint allowance = erc20Token.allowance(user2Address, contractAddress);
+    console.log(contractAddress, allowance);
 
     // - Perform setup
     // DemoSetup setupScript = new DemoSetup();

@@ -6,7 +6,7 @@ import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-pupp
 
 import { console } from "forge-std/console.sol";
 
-import { CSVectorsTable, CSVectorsTableData, CSVectorPotentialsLookupTable, CSVectorPotentialsLookupTable, CSForcesTable, CSForcesTableData, CSMotionsTable, CSMotionsTableData, CSMotionForcesLookupTable, CSMotionForcesLookupTable, CSVectorPotentialsLookupTable, CSPotentialsTable, CSPotentialsTableData, CSSystemTokenTable, CSSystemTokenTableData, CSSystemInfiniteApproveTable, CSVectorMotionsLookupTable } from "@storage/index.sol";
+import { CSVectorsTable, CSVectorsTableData, CSVectorPotentialsLookupTable, CSVectorPotentialsLookupTable, CSForcesTable, CSForcesTableData, CSMotionsTable, CSMotionsTableData, CSMotionForcesLookupTable, CSMotionForcesLookupTable, CSVectorPotentialsLookupTable, CSPotentialsTable, CSPotentialsTableData, CSSystemTokenTable, CSSystemTokenTableData, CSSystemInfiniteApproveTable, CSVectorMotionsLookupTable, CSPContractAddress } from "@storage/index.sol";
 
 import { VectorStatus, MotionStatus, ForceDirection } from "../codegen/common.sol";
 
@@ -23,6 +23,23 @@ contract CSPSystem is System {
   using BytesUtils for bytes32;
   using StringUtils for string;
   using AddressUtils for address;
+
+  // SECTION - Helpers
+
+  /**
+   * Registers the contract address.
+   */
+  function registerContractAddress() public returns (address) {
+    address storedContractAddress = CSPContractAddress.get();
+    address currentContractAddress = address(this);
+
+    if (storedContractAddress != currentContractAddress) {
+      CSPContractAddress.set(currentContractAddress);
+    }
+    return currentContractAddress;
+  }
+
+  // !SECTION
 
   // SECTION - Guards
 

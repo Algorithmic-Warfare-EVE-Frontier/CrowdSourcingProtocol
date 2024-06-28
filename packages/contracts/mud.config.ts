@@ -8,6 +8,12 @@ export default mudConfig({
   },
   namespace: "csp",
   tables: {
+    CSPContractAddress: {
+      valueSchema: {
+        contractAddress: "address",
+      },
+      keySchema: {},
+    },
     CSSystemInfiniteApproveTable: {
       keySchema: {
         userAddress: "address",
